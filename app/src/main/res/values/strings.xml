@@ -3,6 +3,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_measurements">Measurements</string>
+    <string name="nav_forecast">Forecast</string>
     <string name="action_settings">Settings</string>
     <string name="nav_set_as_home">Set Current Location as Home</string>
     <string name="nav_settings">Settings</string>
@@ -11,7 +14,6 @@
     <string name="pref_title_db_url">URL</string>
     <string name="pref_title_db_user">User Name</string>
     <string name="pref_title_db_pw">Password</string>
-
 
     <string name="menu_show_home">Show Home Location</string>
     <string name="menu_show_gps">Show Current Location</string>

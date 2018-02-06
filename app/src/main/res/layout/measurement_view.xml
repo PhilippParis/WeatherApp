@@ -16,16 +16,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:gravity="bottom"
             android:orientation="vertical"
-            android:paddingBottom="20dp">
+            android:paddingBottom="15dp">
 
             <TextView
                 android:id="@+id/tvMaxTemperature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="23°C"
+                android:text="-10.2°"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/holo_red_light" />
 
@@ -43,10 +43,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="21°C"
+            android:text="-25.3°"
             android:textAlignment="center"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
-            android:textSize="80sp" />
+            android:textSize="70sp" />
 
     </LinearLayout>
 
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_columnWeight="1"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="10dp">

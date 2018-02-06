@@ -1,5 +1,6 @@
 package com.philipp.paris.weatherapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,6 +19,8 @@ import com.philipp.paris.weatherapp.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private boolean showHomeData = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // TODO
+        setTitle("Gemeinde Ellbögen");
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -60,8 +66,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_switch_location) {
+            item.setChecked(!item.isChecked());
+            showHomeData = item.isChecked();
+            item.setIcon(showHomeData ? R.drawable.ic_menu_home : R.drawable.ic_location);
+            item.setTitle(showHomeData ? R.string.menu_show_gps : R.string.menu_show_home);
         }
 
         return super.onOptionsItemSelected(item);
@@ -73,18 +82,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_dashboard) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_measurements) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_forecast) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_set_as_home) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_settings) {
+            Intent myIntent = new Intent(this, SettingsActivity.class);
+            this.startActivity(myIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

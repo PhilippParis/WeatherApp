@@ -15,8 +15,8 @@
 
         <com.philipp.paris.weatherapp.components.MeasurementView
             android:layout_width="match_parent"
-            android:layout_weight="2"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="2" />
 
         <TextView
             android:id="@+id/textView2"
