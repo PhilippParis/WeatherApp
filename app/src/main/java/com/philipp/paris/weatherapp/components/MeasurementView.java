@@ -7,6 +7,10 @@ import android.widget.GridLayout;
 
 import com.philipp.paris.weatherapp.R;
 
+
+/**
+ * view which displays the most recent measurement data
+ */
 public class MeasurementView extends GridLayout {
     public MeasurementView(Context context) {
         super(context);
@@ -23,4 +27,6 @@ public class MeasurementView extends GridLayout {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.measurement_view, this, true);
     }
+
+
 }
