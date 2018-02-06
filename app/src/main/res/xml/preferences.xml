@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_cat_measurement_db"
+        android:key="pref_key_db_settings">
+        <EditTextPreference
+            android:key="pref_key_db_url"
+            android:title="@string/pref_title_db_url" />
+        <EditTextPreference
+            android:key="pref_key_db_user"
+            android:dependency="pref_key_db_url"
+            android:title="@string/pref_title_db_user" />
+        <EditTextPreference
+            android:key="pref_key_db_password"
+            android:dependency="pref_key_db_url"
+            android:title="@string/pref_title_db_pw"
+            android:inputType="textPassword"/>
+    </PreferenceCategory>
+</PreferenceScreen>
