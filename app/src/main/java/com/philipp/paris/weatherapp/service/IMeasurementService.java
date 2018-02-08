@@ -10,17 +10,17 @@ public interface IMeasurementService {
     /**
      * @return returns measurements of the current day
      */
-    List<Weather> getMeasurementsToday();
+    void getMeasurementsToday(ServiceCallback<Weather> callback);
 
     /**
      * @param from start of the interval
      * @param to end of the interval
      * @return returns measurements in the interval
      */
-    List<Weather> getMeasurements(Date from, Date to);
+    void getMeasurements(Date from, Date to, ServiceCallback<Weather> callback);
 
     /**
      * @return returns all measurements
      */
-    List<Weather> getMeasurements();
+    void getMeasurements(ServiceCallback<Weather> callback);
 }

@@ -11,8 +11,9 @@ public class InfluxDBQuery {
         this.query = query;
     }
 
-    public void addParameter(String key, String param) {
+    public InfluxDBQuery addParameter(String key, String param) {
         parameters.put(key, param);
+        return this;
     }
 
     public String create(InfluxDB db) {
