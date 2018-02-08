@@ -1,6 +1,7 @@
 package com.philipp.paris.weatherapp.components;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.impl.MeasurementService;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.Locale;
 /**
  * view which displays the most recent measurement data
  */
-public class MeasurementView extends GridLayout {
+public class MeasurementView extends GridLayout implements ServiceCallback<Weather> {
     private MeasurementService service;
     private TextView tvTemperature;
     private TextView tvMinTemperature;
@@ -62,14 +64,31 @@ public class MeasurementView extends GridLayout {
     }
 
     private void updateUI() {
-        //List<Weather> m = service.getMeasurementsToday();
+        service.getMeasurementsToday(this);
 
-        Float currentTemperature = -25.345f;//m.get(m.size() - 1).getTemperature();
+        Float currentTemperature = -20.3f;//m.get(m.size() - 1).getTemperature();
         Float minTemperature = -7.23f;
         Float maxTemperature = 30.23f;
 
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", currentTemperature));
         tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", minTemperature));
         tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
+    }
+
+    @Override
+    public void onResponse(List<Weather> data) {
+        Float currentTemperature = 1f;//m.get(m.size() - 1).getTemperature();
+        Float minTemperature = -7.23f;
+        Float maxTemperature = 30.23f;
+
+        tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", currentTemperature));
+        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", minTemperature));
+        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
+    }
+
+    @Override
+    public void onError() {
+        // TODO
+        //Snackbar.make(findViewById(R.id.tvTemperature), R.string.error_retrieving_measurements, 1).show();
     }
 }

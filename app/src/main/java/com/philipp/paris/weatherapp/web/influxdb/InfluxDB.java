@@ -18,6 +18,7 @@ public class InfluxDB {
                 .addInterceptor(new AuthenticationInterceptor(Credentials.basic(user, password)))
                 .build();
 
+
         Retrofit retrofit = new Retrofit.Builder()
                 .client(httpClient)
                 .baseUrl(url)

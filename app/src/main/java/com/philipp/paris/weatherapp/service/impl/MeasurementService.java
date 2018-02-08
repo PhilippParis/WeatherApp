@@ -58,20 +58,33 @@ public class MeasurementService implements IMeasurementService {
 
     @Override
     public void getMeasurements(Date from, Date to, final ServiceCallback<Weather> callback) {
-        Settings settings = new Settings(context);
-        InfluxDB db = InfluxDBFactory.getInstance(DB_NAME, settings.getDbUrl(), settings.getDbUsername(), settings.getDbPassword());
-        InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather where time >= @from and time <= @to")
-                .addParameter("@from", ISO8601Utils.format(from))
-                .addParameter("@to", ISO8601Utils.format(to));
-        db.query(query, new InfluxDBCallback(callback));
+        InfluxDB db = getDB(callback);
+        if (db != null){
+            InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather where time >= @from and time <= @to")
+                    .addParameter("@from", ISO8601Utils.format(from))
+                    .addParameter("@to", ISO8601Utils.format(to));
+            db.query(query, new InfluxDBCallback(callback));
+        }
     }
 
     @Override
     public void getMeasurements(final ServiceCallback<Weather> callback) {
+        InfluxDB db = getDB(callback);
+        if (db != null){
+            InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather");
+            db.query(query, new InfluxDBCallback(callback));
+        }
+    }
+
+
+    private InfluxDB getDB(ServiceCallback<Weather> callback) {
         Settings settings = new Settings(context);
-        InfluxDB db = InfluxDBFactory.getInstance(DB_NAME, settings.getDbUrl(), settings.getDbUsername(), settings.getDbPassword());
-        InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather");
-        db.query(query, new InfluxDBCallback(callback));
+        try {
+            return InfluxDBFactory.getInstance(DB_NAME, settings.getDbUrl(), settings.getDbUsername(), settings.getDbPassword());
+        } catch (IllegalArgumentException e) {
+            callback.onError();
+            return null;
+        }
     }
 
 }
