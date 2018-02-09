@@ -18,6 +18,5 @@
     <string name="menu_show_home">Show Home Location</string>
     <string name="menu_show_gps">Show Current Location</string>
 
-
     <string name="error_retrieving_measurements">Retrieving Measurements Failed</string>
 </resources>

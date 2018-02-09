@@ -11,7 +11,9 @@ import android.text.style.SuperscriptSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +39,9 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
     private TextView tvMaxTemperature;
     private TextView tvHumidity;
     private TextView tvPressure;
+    private ProgressBar progressBar;
+    private ViewGroup vgDataViews;
+    private ViewGroup vgErrorView;
 
 
     public MeasurementView(Context context) {
@@ -60,6 +65,9 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
         tvMaxTemperature = findViewById(R.id.tvMaxTemperature);
         tvHumidity = findViewById(R.id.tvHumidity);
         tvPressure = findViewById(R.id.tvPressure);
+        progressBar = findViewById(R.id.progressBar);
+        vgDataViews = findViewById(R.id.vgDataViews);
+        vgErrorView = findViewById(R.id.vgError);
 
         /* init services */
         service = new MeasurementService(context);
@@ -69,17 +77,20 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
     }
 
     private void updateUI() {
+        showProgressBar();
         service.getMeasurementsToday(this);
     }
 
     @Override
     public void onResponse(List<Weather> data) {
+        showDataViews();
+
         Weather current = data.get(data.size() - 1);
         Float currentTemperature = current.getTemperature();
         Float currentHumidity = current.getHumidity() * 100;
         Float currentPressure = current.getPressure();
 
-        tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", currentTemperature));
+        tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°C", currentTemperature));
         tvHumidity.setText(String.format(Locale.getDefault(), "%.0f %%", currentHumidity));
         tvPressure.setText(String.format(Locale.getDefault(), "%.0f hPa", currentPressure));
 
@@ -90,6 +101,24 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
     @Override
     public void onError(Throwable t) {
         Log.e(TAG, t.getMessage(), t);
-        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+        showErrorView();
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(VISIBLE);
+        vgDataViews.setVisibility(GONE);
+        vgErrorView.setVisibility(GONE);
+    }
+
+    private void showDataViews() {
+        progressBar.setVisibility(GONE);
+        vgDataViews.setVisibility(VISIBLE);
+        vgErrorView.setVisibility(GONE);
+    }
+
+    private void showErrorView() {
+        progressBar.setVisibility(GONE);
+        vgDataViews.setVisibility(GONE);
+        vgErrorView.setVisibility(VISIBLE);
     }
 }
