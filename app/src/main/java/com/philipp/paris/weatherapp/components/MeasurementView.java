@@ -15,13 +15,11 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Weather;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.impl.MeasurementService;
-import com.philipp.paris.weatherapp.util.StreamUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -90,12 +88,23 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
         Float currentHumidity = current.getHumidity() * 100;
         Float currentPressure = current.getPressure();
 
+        Float minTemperature = Float.MAX_VALUE;
+        Float maxTemperature = Float.MIN_VALUE;
+
+        for (Weather w : data) {
+            if (minTemperature > w.getTemperature()) {
+                minTemperature = w.getTemperature();
+            }
+            if (maxTemperature < w.getTemperature()) {
+                maxTemperature = w.getTemperature();
+            }
+        }
+
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°C", currentTemperature));
         tvHumidity.setText(String.format(Locale.getDefault(), "%.0f %%", currentHumidity));
         tvPressure.setText(String.format(Locale.getDefault(), "%.0f hPa", currentPressure));
-
-        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", 0f));
-        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", 0f));
+        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", minTemperature));
+        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
     }
 
     @Override
