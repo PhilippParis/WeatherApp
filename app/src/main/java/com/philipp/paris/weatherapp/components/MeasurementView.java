@@ -9,14 +9,17 @@ import android.text.TextUtils;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SuperscriptSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.GridLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Weather;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.impl.MeasurementService;
+import com.philipp.paris.weatherapp.util.StreamUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +29,8 @@ import java.util.Locale;
  * view which displays the most recent measurement data
  */
 public class MeasurementView extends GridLayout implements ServiceCallback<Weather> {
+    private static final String TAG = "MeasurementView";
+
     private MeasurementService service;
     private TextView tvTemperature;
     private TextView tvMinTemperature;
@@ -65,30 +70,26 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
 
     private void updateUI() {
         service.getMeasurementsToday(this);
-
-        Float currentTemperature = -20.3f;//m.get(m.size() - 1).getTemperature();
-        Float minTemperature = -7.23f;
-        Float maxTemperature = 30.23f;
-
-        tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", currentTemperature));
-        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", minTemperature));
-        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
     }
 
     @Override
     public void onResponse(List<Weather> data) {
-        Float currentTemperature = 1f;//m.get(m.size() - 1).getTemperature();
-        Float minTemperature = -7.23f;
-        Float maxTemperature = 30.23f;
+        Weather current = data.get(data.size() - 1);
+        Float currentTemperature = current.getTemperature();
+        Float currentHumidity = current.getHumidity() * 100;
+        Float currentPressure = current.getPressure();
 
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", currentTemperature));
-        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", minTemperature));
-        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
+        tvHumidity.setText(String.format(Locale.getDefault(), "%.0f %%", currentHumidity));
+        tvPressure.setText(String.format(Locale.getDefault(), "%.0f hPa", currentPressure));
+
+        tvMinTemperature.setText(String.format(Locale.getDefault(), "%.1f°", 0f));
+        tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", 0f));
     }
 
     @Override
-    public void onError() {
-        // TODO
-        //Snackbar.make(findViewById(R.id.tvTemperature), R.string.error_retrieving_measurements, 1).show();
+    public void onError(Throwable t) {
+        Log.e(TAG, t.getMessage(), t);
+        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
     }
 }

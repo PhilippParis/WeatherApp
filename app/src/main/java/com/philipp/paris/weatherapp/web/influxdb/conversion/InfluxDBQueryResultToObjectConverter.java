@@ -32,13 +32,15 @@ public class InfluxDBQueryResultToObjectConverter {
             } else if (Date.class.isAssignableFrom(field.getType())) {
                 field.set(cc, ISO8601Utils.parse(String.valueOf(value), new ParsePosition(0)));
             } else if (double.class.isAssignableFrom(fieldType) || Double.class.isAssignableFrom(fieldType)) {
-                field.setDouble(cc, Double.parseDouble(value));
+                field.set(cc, Double.parseDouble(value));
+            } else if (float.class.isAssignableFrom(fieldType) || Float.class.isAssignableFrom(fieldType)) {
+                field.set(cc, Float.parseFloat(value));
             } else if (long.class.isAssignableFrom(fieldType) || Long.class.isAssignableFrom(fieldType)) {
-                field.setLong(cc, ((Double) Double.parseDouble(value)).longValue());
+                field.set(cc, Long.parseLong(value));
             } else if (int.class.isAssignableFrom(fieldType) || Integer.class.isAssignableFrom(fieldType)) {
-                field.setInt(cc, ((Double) Double.parseDouble(value)).intValue());
+                field.set(cc, Integer.parseInt(value));
             } else if (boolean.class.isAssignableFrom(fieldType) || Boolean.class.isAssignableFrom(fieldType)) {
-                field.setBoolean(cc, Boolean.valueOf(String.valueOf(value)));
+                field.set(cc, Boolean.parseBoolean(value));
             } else {
                 throw new ConversionFailedException("unsupported type '" + fieldType.toString() + "'");
             }

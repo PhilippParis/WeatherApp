@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface ServiceCallback<T> {
     void onResponse(List<T> data);
-    void onError();
+    void onError(Throwable t);
 }
