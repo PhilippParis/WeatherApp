@@ -1,10 +1,9 @@
 package com.philipp.paris.weatherapp.activities;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,35 +14,42 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.philipp.paris.weatherapp.R;
+import com.philipp.paris.weatherapp.components.DashBoardFragment;
+import com.philipp.paris.weatherapp.components.MeasurementsFragment;
+import com.philipp.paris.weatherapp.domain.Settings;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private boolean showHomeData = false;
+    private DrawerLayout drawer;
+    private Fragment currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // init UI
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // TODO
-        setTitle("Gemeinde Ellbögen");
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_dashboard));
+    }
+
+    private void refreshCurrentFragment() {
+        getFragmentManager().beginTransaction().detach(currentFragment)
+                .attach(currentFragment).commit();
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -53,50 +59,62 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // init switch-location item
+        Settings settings = new Settings(getApplicationContext());
+        MenuItem item = menu.findItem(R.id.action_switch_location);
+        item.setIcon(settings.showHomeLocationData() ? R.drawable.ic_menu_home : R.drawable.ic_location);
+        item.setTitle(settings.showHomeLocationData() ? R.string.menu_show_gps : R.string.menu_show_home);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_switch_location) {
-            item.setChecked(!item.isChecked());
-            showHomeData = item.isChecked();
+        if (item.getItemId() == R.id.action_switch_location) {
+            // update menu item
+            boolean showHomeData = item.isChecked();
             item.setIcon(showHomeData ? R.drawable.ic_menu_home : R.drawable.ic_location);
             item.setTitle(showHomeData ? R.string.menu_show_gps : R.string.menu_show_home);
+            item.setChecked(!item.isChecked());
+
+            // update settings
+            Settings settings = new Settings(getApplicationContext());
+            settings.setShowHomeLocationData(showHomeData);
+            settings.persist();
+
+            refreshCurrentFragment();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_dashboard) {
-
-        } else if (id == R.id.nav_measurements) {
-
-        } else if (id == R.id.nav_forecast) {
-
-        } else if (id == R.id.nav_set_as_home) {
-
-        } else if (id == R.id.nav_settings) {
-            Intent myIntent = new Intent(this, SettingsActivity.class);
-            this.startActivity(myIntent);
+        Fragment fragment = null;
+        switch (item.getItemId()) {
+            case R.id.nav_dashboard:
+                fragment = DashBoardFragment.newInstance();
+                break;
+            case R.id.nav_measurements:
+                fragment = MeasurementsFragment.newInstance();
+                break;
+            case R.id.nav_forecast:
+                break;
+            case R.id.nav_set_as_home:
+                break;
+            case R.id.nav_settings:
+                this.startActivity(new Intent(this, SettingsActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (fragment != null) {
+            currentFragment = fragment;
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            item.setChecked(true);
+        }
+
+        drawer.closeDrawers();
         return true;
     }
 }

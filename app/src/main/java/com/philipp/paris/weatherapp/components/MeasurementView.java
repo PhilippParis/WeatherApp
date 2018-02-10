@@ -28,10 +28,9 @@ import java.util.Locale;
 /**
  * view which displays the most recent measurement data
  */
-public class MeasurementView extends GridLayout implements ServiceCallback<Weather> {
+public class MeasurementView extends GridLayout {
     private static final String TAG = "MeasurementView";
 
-    private MeasurementService service;
     private TextView tvTemperature;
     private TextView tvMinTemperature;
     private TextView tvMaxTemperature;
@@ -67,22 +66,16 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
         vgDataViews = findViewById(R.id.vgDataViews);
         vgErrorView = findViewById(R.id.vgError);
 
-        /* init services */
-        service = new MeasurementService(context);
-
-        /* display data */
-        updateUI();
-    }
-
-    private void updateUI() {
         showProgressBar();
-        service.getMeasurementsToday(this);
     }
 
-    @Override
-    public void onResponse(List<Weather> data) {
-        showDataViews();
+    public void showData(List<Weather> data) {
+        if (data.size() == 0) {
+            showError();
+            return;
+        }
 
+        showDataViews();
         Weather current = data.get(data.size() - 1);
         Float currentTemperature = current.getTemperature();
         Float currentHumidity = current.getHumidity() * 100;
@@ -107,10 +100,10 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
         tvMaxTemperature.setText(String.format(Locale.getDefault(), "%.1f°", maxTemperature));
     }
 
-    @Override
-    public void onError(Throwable t) {
-        Log.e(TAG, t.getMessage(), t);
-        showErrorView();
+    public void showError() {
+        progressBar.setVisibility(GONE);
+        vgDataViews.setVisibility(GONE);
+        vgErrorView.setVisibility(VISIBLE);
     }
 
     private void showProgressBar() {
@@ -123,11 +116,5 @@ public class MeasurementView extends GridLayout implements ServiceCallback<Weath
         progressBar.setVisibility(GONE);
         vgDataViews.setVisibility(VISIBLE);
         vgErrorView.setVisibility(GONE);
-    }
-
-    private void showErrorView() {
-        progressBar.setVisibility(GONE);
-        vgDataViews.setVisibility(GONE);
-        vgErrorView.setVisibility(VISIBLE);
     }
 }

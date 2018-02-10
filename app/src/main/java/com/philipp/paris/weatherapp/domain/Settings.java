@@ -11,12 +11,14 @@ public class Settings {
     private final String KEY_PREF_DB_URL = "pref_key_db_url";
     private final String KEY_PREF_DB_USER = "pref_key_db_user";
     private final String KEY_PREF_DB_PW = "pref_key_db_password";
-    private final String KEY_PREF_DB_HOME = "pref_key_home";
+    private final String KEY_PREF_HOME = "pref_key_home";
+    private final String KEY_PREF_SHOW_HOME = "pref_key_show_home_data";
 
     private String dbUrl;
     private String dbUsername;
     private String dbPassword;
     private String homeLocation;
+    private boolean showHomeLocationData;
     private SharedPreferences pref;
 
     public Settings(Context context) {
@@ -24,7 +26,8 @@ public class Settings {
         this.dbUrl = pref.getString(KEY_PREF_DB_URL, "");
         this.dbUsername = pref.getString(KEY_PREF_DB_USER, "");
         this.dbPassword = pref.getString(KEY_PREF_DB_PW, "");
-        this.homeLocation = pref.getString(KEY_PREF_DB_HOME, "");
+        this.homeLocation = pref.getString(KEY_PREF_HOME, "");
+        this.showHomeLocationData = pref.getBoolean(KEY_PREF_SHOW_HOME, false);
     }
 
     public void persist() {
@@ -32,7 +35,8 @@ public class Settings {
         editor.putString(KEY_PREF_DB_URL, dbUrl);
         editor.putString(KEY_PREF_DB_USER, dbUsername);
         editor.putString(KEY_PREF_DB_PW, dbPassword);
-        editor.putString(KEY_PREF_DB_HOME, homeLocation);
+        editor.putString(KEY_PREF_HOME, homeLocation);
+        editor.putBoolean(KEY_PREF_SHOW_HOME, showHomeLocationData);
         editor.apply();
     }
 
@@ -66,5 +70,13 @@ public class Settings {
 
     public void setHomeLocation(String homeLocation) {
         this.homeLocation = homeLocation;
+    }
+
+    public boolean showHomeLocationData() {
+        return showHomeLocationData;
+    }
+
+    public void setShowHomeLocationData(boolean showHomeLocationData) {
+        this.showHomeLocationData = showHomeLocationData;
     }
 }
