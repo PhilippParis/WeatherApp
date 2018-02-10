@@ -1,15 +1,7 @@
 package com.philipp.paris.weatherapp.components;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.SuperscriptSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
@@ -18,8 +10,6 @@ import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Weather;
-import com.philipp.paris.weatherapp.service.ServiceCallback;
-import com.philipp.paris.weatherapp.service.impl.MeasurementService;
 
 import java.util.List;
 import java.util.Locale;

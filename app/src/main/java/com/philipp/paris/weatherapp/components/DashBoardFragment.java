@@ -1,7 +1,5 @@
 package com.philipp.paris.weatherapp.components;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
@@ -13,11 +11,11 @@ import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Weather;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
-import com.philipp.paris.weatherapp.service.impl.MeasurementService;
+import com.philipp.paris.weatherapp.service.MeasurementService;
 
 import java.util.List;
 
-public class DashBoardFragment extends Fragment implements ServiceCallback<Weather> {
+public class DashBoardFragment extends Fragment implements ServiceCallback<List<Weather>> {
 
     private MeasurementService measurementService;
     private MeasurementView measurementView;
@@ -55,7 +53,7 @@ public class DashBoardFragment extends Fragment implements ServiceCallback<Weath
     }
 
     @Override
-    public void onResponse(List<Weather> data) {
+    public void onSuccess(List<Weather> data) {
         measurementView.showData(data);
     }
 

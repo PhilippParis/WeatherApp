@@ -1,15 +1,11 @@
-package com.philipp.paris.weatherapp.service.impl;
+package com.philipp.paris.weatherapp.service;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Weather;
-import com.philipp.paris.weatherapp.service.IMeasurementService;
-import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDB;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBFactory;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQuery;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQueryResult;
@@ -19,27 +15,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class MeasurementService implements IMeasurementService {
+public class MeasurementService {
     private static final String TAG = "MeasurementService";
     private static final String DB_NAME = "db";
     private Context context;
 
     private class InfluxDBCallback implements com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback {
-        private ServiceCallback<Weather> callback;
-        private InfluxDBCallback(ServiceCallback<Weather> callback) {
+        private ServiceCallback<List<Weather>> callback;
+        private InfluxDBCallback(ServiceCallback<List<Weather>> callback) {
             this.callback = callback;
         }
         @Override
         public void onResponse(InfluxDBQueryResult result) {
             try {
                 if (result == null || result.seriesCount() == 0) {
-                    callback.onResponse(new ArrayList<Weather>());
+                    callback.onSuccess(new ArrayList<Weather>());
                 }
-                callback.onResponse(result.getSeries(0).toObject(Weather.class));
+                callback.onSuccess(result.getSeries(0).toObject(Weather.class));
             } catch (Exception e) {
                 callback.onError(e);
             }
@@ -54,8 +46,7 @@ public class MeasurementService implements IMeasurementService {
         this.context = context;
     }
 
-    @Override
-    public void getMeasurementsToday(final ServiceCallback<Weather> callback) {
+    public void getMeasurementsToday(final ServiceCallback<List<Weather>> callback) {
         Log.v(TAG, "entering getMeasurementsToday");
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -68,8 +59,7 @@ public class MeasurementService implements IMeasurementService {
         getMeasurements(from, to, callback);
     }
 
-    @Override
-    public void getMeasurements(Date from, Date to, final ServiceCallback<Weather> callback) {
+    public void getMeasurements(Date from, Date to, final ServiceCallback<List<Weather>> callback) {
         Log.v(TAG, "entering getMeasurements with params " + from.toString() +", " + to.toString());
         InfluxDB db = getDB(callback);
         if (db != null){
@@ -80,8 +70,7 @@ public class MeasurementService implements IMeasurementService {
         }
     }
 
-    @Override
-    public void getMeasurements(final ServiceCallback<Weather> callback) {
+    public void getMeasurements(final ServiceCallback<List<Weather>> callback) {
         Log.v(TAG, "entering getMeasurements");
         InfluxDB db = getDB(callback);
         if (db != null){
@@ -90,7 +79,7 @@ public class MeasurementService implements IMeasurementService {
         }
     }
 
-    private InfluxDB getDB(ServiceCallback<Weather> callback) {
+    private InfluxDB getDB(ServiceCallback<List<Weather>> callback) {
         Settings settings = new Settings(context);
         try {
             return InfluxDBFactory.getInstance(DB_NAME, settings.getDbUrl(), settings.getDbUsername(), settings.getDbPassword());

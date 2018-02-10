@@ -1,5 +1,7 @@
 package com.philipp.paris.weatherapp.activities;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.DashBoardFragment;
+import com.philipp.paris.weatherapp.components.LocationDialogFragment;
 import com.philipp.paris.weatherapp.components.MeasurementsFragment;
 import com.philipp.paris.weatherapp.domain.Settings;
 
@@ -102,9 +105,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_forecast:
                 break;
             case R.id.nav_set_as_home:
+                DialogFragment dialog = new LocationDialogFragment();
+                dialog.show(getFragmentManager(), "location_dialog");
                 break;
             case R.id.nav_settings:
                 this.startActivity(new Intent(this, SettingsActivity.class));
+                break;
         }
 
         if (fragment != null) {

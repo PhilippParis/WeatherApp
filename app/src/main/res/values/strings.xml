@@ -19,7 +19,8 @@
     <string name="menu_show_gps">Show Current Location</string>
 
     <string name="error_retrieving_measurements">Retrieving Measurements Failed</string>
+    <string name="error_retrieving_location">Retrieving Location Failed</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
