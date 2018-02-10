@@ -9,6 +9,7 @@ import com.philipp.paris.weatherapp.domain.Weather;
 import com.philipp.paris.weatherapp.service.IMeasurementService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDB;
+import com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBFactory;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQuery;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQueryResult;
@@ -27,24 +28,24 @@ public class MeasurementService implements IMeasurementService {
     private static final String DB_NAME = "db";
     private Context context;
 
-    private class InfluxDBCallback implements Callback<InfluxDBQueryResult> {
+    private class InfluxDBCallback implements com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback {
         private ServiceCallback<Weather> callback;
         private InfluxDBCallback(ServiceCallback<Weather> callback) {
             this.callback = callback;
         }
         @Override
-        public void onResponse(Call<InfluxDBQueryResult> call, Response<InfluxDBQueryResult> response) {
+        public void onResponse(InfluxDBQueryResult result) {
             try {
-                if (response.body() == null || response.body().seriesCount() == 0) {
+                if (result == null || result.seriesCount() == 0) {
                     callback.onResponse(new ArrayList<Weather>());
                 }
-                callback.onResponse(response.body().getSeries(0).toObject(Weather.class));
+                callback.onResponse(result.getSeries(0).toObject(Weather.class));
             } catch (Exception e) {
                 callback.onError(e);
             }
         }
         @Override
-        public void onFailure(Call<InfluxDBQueryResult> call, Throwable t) {
+        public void onFailure(Throwable t) {
             callback.onError(t);
         }
     }
@@ -88,7 +89,6 @@ public class MeasurementService implements IMeasurementService {
             db.query(query, new InfluxDBCallback(callback));
         }
     }
-
 
     private InfluxDB getDB(ServiceCallback<Weather> callback) {
         Settings settings = new Settings(context);
