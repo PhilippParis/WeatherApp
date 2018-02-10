@@ -3,7 +3,6 @@ package com.philipp.paris.weatherapp.web.influxdb.conversion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQueryResult;
 
@@ -24,19 +23,24 @@ public class InfluxDBQueryResultConverter implements Converter<ResponseBody, Inf
     public InfluxDBQueryResult convert(ResponseBody value) throws IOException {
         try {
             JsonObject jsonObject = new JsonParser().parse(value.string()).getAsJsonObject();
-            InfluxDBQueryResult queryResult = new InfluxDBQueryResult();
+            if (jsonObject.has("error")) {
+                throw new IOException(jsonObject.get("error").getAsString());
+            }
 
+            InfluxDBQueryResult queryResult = new InfluxDBQueryResult();
             JsonArray jsonArray = jsonObject.getAsJsonArray(JSON_KEY_RESULTS);
             for (JsonElement e : jsonArray) {
-                queryResult.addSeries(parseSeries(e.getAsJsonObject().getAsJsonArray(JSON_KEY_SERIES).get(0).getAsJsonObject()));
+                if (e.getAsJsonObject().has(JSON_KEY_SERIES)) {
+                    queryResult.addSeries(parseSeries(e.getAsJsonObject().getAsJsonArray(JSON_KEY_SERIES).get(0).getAsJsonObject()));
+                }
             }
             return queryResult;
         } catch (Exception e) {
-            return null;
+            throw new IOException("HTTP Response conversion failed: '" + e.getMessage() + "'", e);
         }
     }
 
-    private InfluxDBQueryResult.Series parseSeries(JsonObject seriesObject) throws Exception {
+    private InfluxDBQueryResult.Series parseSeries(JsonObject seriesObject) throws IOException {
         String seriesName = getSeriesName(seriesObject);
         String[] columns = getSeriesColumns(seriesObject);
         String[][] values = getSeriesValues(seriesObject, columns.length);
@@ -44,11 +48,11 @@ public class InfluxDBQueryResultConverter implements Converter<ResponseBody, Inf
         return new InfluxDBQueryResult.Series(seriesName, columns, values);
     }
 
-    private String getSeriesName(JsonObject seriesObject) throws Exception {
+    private String getSeriesName(JsonObject seriesObject) throws IOException {
         return seriesObject.get(JSON_KEY_SERIES_NAME).getAsString();
     }
 
-    private String[] getSeriesColumns(JsonObject seriesObject) throws Exception {
+    private String[] getSeriesColumns(JsonObject seriesObject) throws IOException {
         JsonArray jsonArrayColumns = seriesObject.getAsJsonArray(JSON_KEY_SERIES_COLUMNS);
         String[] cols = new String[jsonArrayColumns.size()];
         for (int i = 0; i < cols.length; i++) {
@@ -57,7 +61,7 @@ public class InfluxDBQueryResultConverter implements Converter<ResponseBody, Inf
         return cols;
     }
 
-    private String[][] getSeriesValues(JsonObject seriesObject, int colCount) throws Exception {
+    private String[][] getSeriesValues(JsonObject seriesObject, int colCount) throws IOException {
         JsonArray jsonArrayEntries = seriesObject.getAsJsonArray(JSON_KEY_SERIES_ENTRIES);
         String[][] values = new String[jsonArrayEntries.size()][colCount];
         for (int r = 0; r < jsonArrayEntries.size(); r++) {

@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.influxdb;
+package com.philipp.paris.weatherapp.influxdb.util;
 
 
 import com.google.gson.internal.bind.util.ISO8601Utils;

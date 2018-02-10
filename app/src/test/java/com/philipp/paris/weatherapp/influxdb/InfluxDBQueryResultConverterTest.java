@@ -1,9 +1,12 @@
 package com.philipp.paris.weatherapp.influxdb;
 
+import com.philipp.paris.weatherapp.influxdb.util.TestDataUtil;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQueryResult;
 import com.philipp.paris.weatherapp.web.influxdb.conversion.InfluxDBQueryResultConverter;
 
 import org.junit.Test;
+
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.ResponseBody;
@@ -60,30 +63,28 @@ public class InfluxDBQueryResultConverterTest {
         TestDataUtil.assertSeries(series2, result.getSeries(1));
     }
 
-    @Test
-    public void convertErrorResponse() throws Exception {
-        fail();
+    @Test(expected = IOException.class)
+    public void convertErrorResponse() throws IOException {
+        ResponseBody body = ResponseBody.create(MediaType.parse("application/json"),
+                "{\"error\": \"unable to parse authentication credentials\"}");
+
+        // EXEC
+        converter.convert(body);
     }
 
-    @Test
-    public void convertInvalidDataResponse() throws Exception {
+    @Test(expected = IOException.class)
+    public void convertInvalidDataResponse() throws IOException {
         ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), "{\"key\":\"value\"}");
 
         // EXEC
-        InfluxDBQueryResult result = converter.convert(body);
-
-        // VERIFY
-        assertNull(result);
+        converter.convert(body);
     }
 
-    @Test
-    public void convertInvalidJsonResponse() throws Exception {
+    @Test(expected = IOException.class)
+    public void convertInvalidJsonResponse() throws IOException {
         ResponseBody body = ResponseBody.create(MediaType.parse("application/json"), "{invalid json}");
 
         // EXEC
-        InfluxDBQueryResult result = converter.convert(body);
-
-        // VERIFY
-        assertNull(result);
+        converter.convert(body);
     }
 }
