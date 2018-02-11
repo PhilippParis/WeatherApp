@@ -8,6 +8,7 @@ import android.location.Address;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
@@ -22,7 +23,7 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
     private AlertDialog dialog;
     private Address address;
     private TextView tvLocation;
-    private TextView tvLoading;
+    private ImageView imgView;
     private LocationService locationService = LocationService.getInstance();
 
     @Override
@@ -52,8 +53,8 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
 
     @Override
     public void onShow(DialogInterface dialogInterface) {
-        tvLoading = view.findViewById(R.id.tvLoading);
         tvLocation = view.findViewById(R.id.tvLocation);
+        imgView = view.findViewById(R.id.imageView);
 
         showProgressbar();
         getLocation();
@@ -79,6 +80,13 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
     }
 
+    private void showError() {
+        tvLocation.setText(R.string.error_retrieving_location);
+        imgView.setImageResource(R.drawable.ic_error_outline);
+        view.findViewById(R.id.layoutLoading).setVisibility(View.GONE);
+        view.findViewById(R.id.layoutLocation).setVisibility(View.VISIBLE);
+    }
+
     private void getLocation() {
         locationService.getAddress(getContext(), new ServiceCallback<Address>() {
             @Override
@@ -88,8 +96,7 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
 
             @Override
             public void onError(Throwable t) {
-                tvLoading.setText(R.string.error_retrieving_location);
-                view.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                showError();
             }
         }, new LocationService.LocationServiceCallback() {
             @Override
