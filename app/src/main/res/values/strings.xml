@@ -20,6 +20,7 @@
 
     <string name="error_retrieving_measurements">Retrieving Measurements Failed</string>
     <string name="error_retrieving_location">Retrieving Location Failed</string>
+    <string name="error_no_data">No Data Available</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

@@ -2,6 +2,7 @@ package com.philipp.paris.weatherapp.components;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,7 +77,9 @@ public class MeasurementChart extends GridLayout {
 
     public void display() {
         chart.clear();
-        chart.setData(lineData);
+        if (lineData.getDataSetCount() > 0) {
+            chart.setData(lineData);
+        }
     }
 
     private LineDataSet toLineDataSet(String label, List<Weather> data, int color) {
@@ -136,6 +139,9 @@ public class MeasurementChart extends GridLayout {
         chart.setDrawGridBackground(false);
         chart.setDrawBorders(false);
         chart.setDescription(null);
+        chart.setNoDataText(getResources().getString(R.string.error_no_data));
+        chart.setNoDataTextColor(Color.GRAY);
+        chart.setNoDataTextTypeface(Typeface.DEFAULT);
 
         // legend
         chart.getLegend().setEnabled(false);
@@ -160,28 +166,5 @@ public class MeasurementChart extends GridLayout {
                 break;
         }
         xAxis.setValueFormatter(new DateAxisValueFormatter(refTimestamp, format));
-    }
-
-    public void setDummyData(Scope scope) {
-        for (int j = 2015; j < 2020; j++) {
-            List<Weather> weather = new ArrayList<>();
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.YEAR, j);
-            long prevTime = calendar.getTime().getTime();
-            float prevTemp = 0f;
-            for (int i = 0; i < (scope == Scope.DAY? 144: 7 * 48); i++) {
-                Weather w = new Weather();
-                w.setTime(new Date(prevTime));
-                w.setTemperature(prevTemp);
-                weather.add(w);
-
-                prevTemp = w.getTemperature() + new Random().nextFloat() * 2 - 1.0f;
-                prevTime += (scope == Scope.DAY? 10 : 30) * DateUtil.MINUTE;
-            }
-            addSeries(String.valueOf(j), weather);
-        }
     }
 }
