@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.DashBoardFragment;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Fragment currentFragment;
+    private MenuItem itemSwitchLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +68,9 @@ public class MainActivity extends AppCompatActivity
 
         // init switch-location item
         Settings settings = new Settings(getApplicationContext());
-        MenuItem item = menu.findItem(R.id.action_switch_location);
-        item.setIcon(settings.showHomeLocationData() ? R.drawable.ic_menu_home : R.drawable.ic_location);
-        item.setTitle(settings.showHomeLocationData() ? R.string.menu_show_gps : R.string.menu_show_home);
+        itemSwitchLocation = menu.findItem(R.id.action_switch_location);
+        itemSwitchLocation.setIcon(settings.showHomeLocationData() ? R.drawable.ic_menu_home : R.drawable.ic_location);
+        itemSwitchLocation.setTitle(settings.showHomeLocationData() ? R.string.menu_show_gps : R.string.menu_show_home);
         return true;
     }
 
@@ -118,6 +120,10 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
             item.setChecked(true);
+
+            if (itemSwitchLocation != null) {
+                itemSwitchLocation.setVisible(item.getItemId() == R.id.nav_dashboard);
+            }
         }
 
         drawer.closeDrawers();
