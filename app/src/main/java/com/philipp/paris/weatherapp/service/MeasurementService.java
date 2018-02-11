@@ -1,10 +1,12 @@
 package com.philipp.paris.weatherapp.service;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.util.DateUtil;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDB;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBFactory;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQuery;
@@ -48,15 +50,8 @@ public class MeasurementService {
 
     public void getMeasurementsToday(final ServiceCallback<List<Weather>> callback) {
         Log.v(TAG, "entering getMeasurementsToday");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Date from = calendar.getTime();
-
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
-        Date to = calendar.getTime();
-        getMeasurements(from, to, callback);
+        Pair<Date, Date> range = DateUtil.getStartEndOfCurrentDay();
+        getMeasurements(range.first, range.second, callback);
     }
 
     public void getMeasurements(Date from, Date to, final ServiceCallback<List<Weather>> callback) {

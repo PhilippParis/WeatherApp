@@ -9,6 +9,22 @@ public class Weather {
     private Float humidity;
     private Float pressure;
 
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public void setTemperature(Float temperature) {
+        this.temperature = temperature;
+    }
+
+    public void setHumidity(Float humidity) {
+        this.humidity = humidity;
+    }
+
+    public void setPressure(Float pressure) {
+        this.pressure = pressure;
+    }
+
     public Date getTime() {
         return time;
     }

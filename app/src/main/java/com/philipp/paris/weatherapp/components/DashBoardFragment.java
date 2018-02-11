@@ -3,6 +3,7 @@ package com.philipp.paris.weatherapp.components;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.philipp.paris.weatherapp.service.MeasurementService;
 import java.util.List;
 
 public class DashBoardFragment extends Fragment implements ServiceCallback<List<Weather>> {
+    private static final String TAG = "DashBoardFragment";
 
     private MeasurementService measurementService;
     private MeasurementView measurementView;
@@ -59,6 +61,7 @@ public class DashBoardFragment extends Fragment implements ServiceCallback<List<
 
     @Override
     public void onError(Throwable t) {
+        Log.e(TAG, t.getMessage());
         measurementView.showError();
     }
 }
