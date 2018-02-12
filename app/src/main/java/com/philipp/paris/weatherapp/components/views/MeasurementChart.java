@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.GridLayout;
+import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -36,6 +37,7 @@ public class MeasurementChart extends GridLayout {
     public enum Scope {DAY, WEEK}
 
     private LineChart chart;
+    private ProgressBar progressBar;
     private YAxis yAxis;
     private XAxis xAxis;
     private Float maxAbsTemperature = Float.MIN_VALUE;
@@ -56,6 +58,7 @@ public class MeasurementChart extends GridLayout {
         this.scope = scope;
         maxAbsTemperature = Float.MIN_VALUE;
         lineData = new LineData();
+        showProgressBar();
     }
 
     public void addSeries(String label, List<Measurement> data) {
@@ -75,6 +78,14 @@ public class MeasurementChart extends GridLayout {
             chart.setData(lineData);
             chart.invalidate();
         }
+
+        progressBar.setVisibility(GONE);
+        chart.setVisibility(VISIBLE);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(VISIBLE);
+        chart.setVisibility(GONE);
     }
 
     private LineDataSet toLineDataSet(String label, List<Measurement> data, int color) {
@@ -106,6 +117,7 @@ public class MeasurementChart extends GridLayout {
         inflater.inflate(R.layout.measurement_chart, this, true);
 
         chart = findViewById(R.id.chart);
+        progressBar = findViewById(R.id.progressBar);
 
         // interaction
         chart.setScaleYEnabled(false);
