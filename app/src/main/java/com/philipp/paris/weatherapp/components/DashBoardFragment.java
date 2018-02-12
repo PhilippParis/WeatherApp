@@ -10,13 +10,13 @@ import android.view.ViewGroup;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Settings;
-import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 
 import java.util.List;
 
-public class DashBoardFragment extends Fragment implements ServiceCallback<List<Weather>> {
+public class DashBoardFragment extends Fragment implements ServiceCallback<List<Measurement>> {
     private static final String TAG = "DashBoardFragment";
 
     private MeasurementService measurementService;
@@ -55,7 +55,7 @@ public class DashBoardFragment extends Fragment implements ServiceCallback<List<
     }
 
     @Override
-    public void onSuccess(List<Weather> data) {
+    public void onSuccess(List<Measurement> data) {
         measurementView.showData(data);
     }
 

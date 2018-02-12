@@ -9,7 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
-import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.domain.Measurement;
 
 import java.util.List;
 import java.util.Locale;
@@ -59,14 +59,14 @@ public class MeasurementView extends GridLayout {
         showProgressBar();
     }
 
-    public void showData(List<Weather> data) {
+    public void showData(List<Measurement> data) {
         if (data.size() == 0) {
             showError();
             return;
         }
 
         showDataViews();
-        Weather current = data.get(data.size() - 1);
+        Measurement current = data.get(data.size() - 1);
         Float currentTemperature = current.getTemperature();
         Float currentHumidity = current.getHumidity() * 100;
         Float currentPressure = current.getPressure();
@@ -74,7 +74,7 @@ public class MeasurementView extends GridLayout {
         Float minTemperature = Float.MAX_VALUE;
         Float maxTemperature = Float.MIN_VALUE;
 
-        for (Weather w : data) {
+        for (Measurement w : data) {
             if (minTemperature > w.getTemperature()) {
                 minTemperature = w.getTemperature();
             }

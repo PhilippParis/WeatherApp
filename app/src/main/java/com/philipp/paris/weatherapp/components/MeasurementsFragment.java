@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
-import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.util.DateUtil;
@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MeasurementsFragment extends Fragment implements View.OnClickListener, ServiceCallback<List<Weather>> {
+public class MeasurementsFragment extends Fragment implements View.OnClickListener, ServiceCallback<List<Measurement>> {
 
     private MeasurementChart chart;
     private ImageButton btnLeft;
@@ -111,7 +111,7 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
     }
 
     @Override
-    public void onSuccess(List<Weather> data) {
+    public void onSuccess(List<Measurement> data) {
         if (!data.isEmpty()) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(data.get(0).getTime());

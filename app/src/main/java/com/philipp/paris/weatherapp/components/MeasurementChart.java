@@ -4,11 +4,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.GridLayout;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -16,22 +14,17 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.converters.DateAxisValueFormatter;
-import com.philipp.paris.weatherapp.domain.Weather;
+import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.util.DateUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Random;
 
 public class MeasurementChart extends GridLayout {
     private static final int TEMP_PADDING = 5;
@@ -65,7 +58,7 @@ public class MeasurementChart extends GridLayout {
         lineData = new LineData();
     }
 
-    public void addSeries(String label, List<Weather> data) {
+    public void addSeries(String label, List<Measurement> data) {
         lineData.addDataSet(toLineDataSet(label, data,
                 Color.parseColor(colors[lineData.getDataSetCount()])));
 
@@ -84,11 +77,11 @@ public class MeasurementChart extends GridLayout {
         }
     }
 
-    private LineDataSet toLineDataSet(String label, List<Weather> data, int color) {
+    private LineDataSet toLineDataSet(String label, List<Measurement> data, int color) {
         List<Entry> temperature = new ArrayList<>();
         Date origin = data.get(0).getTime();
 
-        for (Weather w : data) {
+        for (Measurement w : data) {
             float timestamp = (w.getTime().getTime() - origin.getTime())  *
                     (scope == Scope.DAY? CORRECTION_FACTOR_DAY : CORRECTION_FACTOR_WEEK);
             temperature.add(new Entry(timestamp, w.getTemperature()));
