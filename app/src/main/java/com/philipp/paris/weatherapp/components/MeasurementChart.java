@@ -10,6 +10,7 @@ import android.widget.GridLayout;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -75,10 +76,11 @@ public class MeasurementChart extends GridLayout {
         lineData.setDrawValues(false);
     }
 
-    public void display() {
-        chart.clear();
+    public void show() {
         if (lineData.getDataSetCount() > 0) {
+            chart.getLegend().setEnabled(lineData.getDataSetCount() > 1);
             chart.setData(lineData);
+            chart.invalidate();
         }
     }
 
@@ -144,7 +146,10 @@ public class MeasurementChart extends GridLayout {
         chart.setNoDataTextTypeface(Typeface.DEFAULT);
 
         // legend
-        chart.getLegend().setEnabled(false);
+        Legend legend = chart.getLegend();
+        legend.setDrawInside(true);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
     }
 
     private void formatAxis(Scope scope, Date refTimestamp) {

@@ -1,8 +1,6 @@
 package com.philipp.paris.weatherapp.components;
 
 
-import android.app.Service;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
@@ -12,21 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.philipp.paris.weatherapp.R;
-import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Weather;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.util.DateUtil;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -78,6 +69,7 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
         super.onStart();
         scope = MeasurementChart.Scope.DAY;
         range = DateUtil.getStartEndOfCurrentDay();
+        chart.initChart(scope);
         sendDataRequest(Calendar.getInstance().get(Calendar.YEAR));
     }
 
@@ -100,6 +92,7 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
                 }
                 break;
         }
+        chart.initChart(scope);
         sendDataRequest(Calendar.getInstance().get(Calendar.YEAR));
     }
 
@@ -114,7 +107,6 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
         Date to = calendar.getTime();
 
         service.getMeasurements(from, to, this);
-        chart.initChart(scope);
         setScopeText();
     }
 
@@ -129,7 +121,7 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
             // request data from prev year
             sendDataRequest(year - 1);
         } else {
-            chart.display();
+            chart.show();
         }
     }
 
