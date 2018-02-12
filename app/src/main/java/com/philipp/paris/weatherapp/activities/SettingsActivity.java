@@ -3,8 +3,7 @@ package com.philipp.paris.weatherapp.activities;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.philipp.paris.weatherapp.R;
-import com.philipp.paris.weatherapp.components.SettingsFragment;
+import com.philipp.paris.weatherapp.components.fragments.SettingsFragment;
 
 public class SettingsActivity extends Activity {
 

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.philipp.paris.weatherapp.components.DashBoardFragment">
+    tools:context="com.philipp.paris.weatherapp.components.fragments.DashBoardFragment">
 
     <LinearLayout
         android:id="@+id/layout_main"
@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.philipp.paris.weatherapp.components.MeasurementView
+        <com.philipp.paris.weatherapp.components.views.MeasurementView
             android:id="@+id/measurementView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

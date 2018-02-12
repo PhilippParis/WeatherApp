@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.components;
+package com.philipp.paris.weatherapp.components.fragments;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.philipp.paris.weatherapp.R;
+import com.philipp.paris.weatherapp.components.views.MeasurementView;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.service.ForecastService;
-import com.philipp.paris.weatherapp.service.LocationService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

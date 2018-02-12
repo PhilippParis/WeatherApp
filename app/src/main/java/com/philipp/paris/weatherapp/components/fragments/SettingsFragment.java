@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.components;
+package com.philipp.paris.weatherapp.components.fragments;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;

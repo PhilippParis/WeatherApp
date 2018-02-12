@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.components;
+package com.philipp.paris.weatherapp.components.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

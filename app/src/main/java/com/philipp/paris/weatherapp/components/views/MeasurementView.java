@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.components;
+package com.philipp.paris.weatherapp.components.views;
 
 import android.content.Context;
 import android.util.AttributeSet;

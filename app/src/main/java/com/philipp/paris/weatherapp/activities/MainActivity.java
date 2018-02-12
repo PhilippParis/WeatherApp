@@ -16,9 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.philipp.paris.weatherapp.R;
-import com.philipp.paris.weatherapp.components.DashBoardFragment;
-import com.philipp.paris.weatherapp.components.LocationDialogFragment;
-import com.philipp.paris.weatherapp.components.MeasurementsFragment;
+import com.philipp.paris.weatherapp.components.fragments.DashBoardFragment;
+import com.philipp.paris.weatherapp.components.dialogs.LocationDialogFragment;
+import com.philipp.paris.weatherapp.components.fragments.MeasurementsFragment;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.service.LocationService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;

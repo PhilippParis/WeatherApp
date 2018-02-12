@@ -1,4 +1,4 @@
-package com.philipp.paris.weatherapp.components;
+package com.philipp.paris.weatherapp.components.fragments;
 
 
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
+import com.philipp.paris.weatherapp.components.views.MeasurementChart;
 import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;

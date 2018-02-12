@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="20dp"
-    tools:context="com.philipp.paris.weatherapp.components.MeasurementsFragment">
+    tools:context="com.philipp.paris.weatherapp.components.fragments.MeasurementsFragment">
 
 
     <LinearLayout
@@ -45,7 +45,7 @@
 
     </LinearLayout>
 
-    <com.philipp.paris.weatherapp.components.MeasurementChart
+    <com.philipp.paris.weatherapp.components.views.MeasurementChart
         android:id="@+id/measurementChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
