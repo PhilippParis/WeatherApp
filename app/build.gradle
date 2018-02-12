@@ -16,6 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        it.buildConfigField 'String', 'WU_API_KEY', WU_API_KEY
+    }
     testOptions {
         unitTests.returnDefaultValues = true
     }

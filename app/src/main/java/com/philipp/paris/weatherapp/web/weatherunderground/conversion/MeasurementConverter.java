@@ -36,7 +36,7 @@ public class MeasurementConverter implements Converter<ResponseBody, Measurement
             Measurement measurement = new Measurement();
             measurement.setTime(formatter.parse(jsonObject.get(JSON_KEY_TIME).getAsString()));
             measurement.setTemperature(jsonObject.get(JSON_KEY_TEMPERATURE).getAsFloat());
-            measurement.setHumidity(jsonObject.get(JSON_KEY_HUMIDITY).getAsFloat());
+            measurement.setHumidity(Float.parseFloat(jsonObject.get(JSON_KEY_HUMIDITY).getAsString().replace('%',' ')) / 100f);
             measurement.setWind(jsonObject.get(JSON_KEY_WIND).getAsFloat());
             measurement.setPressure(jsonObject.get(JSON_KEY_PRESSURE).getAsFloat());
             measurement.setPrecipitation(jsonObject.get(JSON_KEY_PRECIP).getAsFloat());

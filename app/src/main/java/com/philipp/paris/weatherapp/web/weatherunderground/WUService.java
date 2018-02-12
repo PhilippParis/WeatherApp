@@ -8,6 +8,6 @@ import retrofit2.http.Path;
 
 public interface WUService {
 
-    @GET("/api/{api_key}/conditions/q/{location}")
+    @GET("/api/{api_key}/conditions/q/{location}.json")
     Call<Measurement> conditions(@Path("api_key") String apiKey, @Path("location") String location);
 }

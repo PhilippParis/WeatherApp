@@ -11,15 +11,20 @@ import android.view.ViewGroup;
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Measurement;
+import com.philipp.paris.weatherapp.service.ForecastService;
+import com.philipp.paris.weatherapp.service.LocationService;
 import com.philipp.paris.weatherapp.service.ServiceCallback;
 import com.philipp.paris.weatherapp.service.MeasurementService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class DashBoardFragment extends Fragment implements ServiceCallback<List<Measurement>> {
+public class DashBoardFragment extends Fragment {
     private static final String TAG = "DashBoardFragment";
 
     private MeasurementService measurementService;
+    private ForecastService forecastService;
     private MeasurementView measurementView;
 
     public DashBoardFragment() {
@@ -40,6 +45,7 @@ public class DashBoardFragment extends Fragment implements ServiceCallback<List<
         super.onViewCreated(view, savedInstanceState);
         measurementView = view.findViewById(R.id.measurementView);
         measurementService = new MeasurementService(getContext());
+        forecastService = new ForecastService();
     }
 
     @Override
@@ -48,20 +54,44 @@ public class DashBoardFragment extends Fragment implements ServiceCallback<List<
         Settings settings = new Settings(getContext());
 
         if (settings.showHomeLocationData()) {
-            measurementService.getMeasurementsToday(this);
+            getMeasurementFromDatabase();
+        } else if (settings.currentLocationSet()) {
+            getMeasurementFromForecastService();
         } else {
-            // TODO WeatherProviderService.getMeasurementsToday
+            measurementView.showProgressBar();
         }
     }
 
-    @Override
-    public void onSuccess(List<Measurement> data) {
-        measurementView.showData(data);
+    private void getMeasurementFromDatabase() {
+        measurementService.getMeasurementsToday(new ServiceCallback<List<Measurement>>() {
+            @Override
+            public void onSuccess(List<Measurement> data) {
+                measurementView.showData(data);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.e(TAG, t.getMessage());
+                measurementView.showError();
+            }
+        });
     }
 
-    @Override
-    public void onError(Throwable t) {
-        Log.e(TAG, t.getMessage());
-        measurementView.showError();
+    private void getMeasurementFromForecastService() {
+        Settings settings = new Settings(getContext());
+        forecastService.getCurrentConditions(settings.getCurrentLocationLatitude(),
+                settings.getCurrentLocationLongitude(),
+                new ServiceCallback<Measurement>() {
+                    @Override
+                    public void onSuccess(Measurement data) {
+                        measurementView.showData(Arrays.asList(data));
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(TAG, t.getMessage());
+                        measurementView.showError();
+                    }
+                });
     }
 }

@@ -65,6 +65,13 @@ public class MeasurementView extends GridLayout {
             return;
         }
 
+        // only one instance -> hide min max temperatures
+        if (data.size() == 1){
+            findViewById(R.id.layoutMinMaxTemp).setVisibility(GONE);
+        } else {
+            findViewById(R.id.layoutMinMaxTemp).setVisibility(VISIBLE);
+        }
+
         showDataViews();
         Measurement current = data.get(data.size() - 1);
         Float currentTemperature = current.getTemperature();
@@ -96,7 +103,7 @@ public class MeasurementView extends GridLayout {
         vgErrorView.setVisibility(VISIBLE);
     }
 
-    private void showProgressBar() {
+    public void showProgressBar() {
         progressBar.setVisibility(VISIBLE);
         vgDataViews.setVisibility(GONE);
         vgErrorView.setVisibility(GONE);

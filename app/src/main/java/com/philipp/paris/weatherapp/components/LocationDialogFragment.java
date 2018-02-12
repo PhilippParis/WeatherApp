@@ -62,7 +62,7 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
 
     private void persist() {
         Settings settings = new Settings(getContext());
-        settings.setHomeLocation(address.getLatitude() + "," + address.getLongitude());
+        settings.setHomeLocation(address.getLatitude(), address.getLongitude());
         settings.persist();
     }
 

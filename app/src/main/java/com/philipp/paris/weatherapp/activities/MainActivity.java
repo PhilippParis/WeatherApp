@@ -1,10 +1,10 @@
 package com.philipp.paris.weatherapp.activities;
 
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,19 +14,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.DashBoardFragment;
 import com.philipp.paris.weatherapp.components.LocationDialogFragment;
 import com.philipp.paris.weatherapp.components.MeasurementsFragment;
 import com.philipp.paris.weatherapp.domain.Settings;
+import com.philipp.paris.weatherapp.service.LocationService;
+import com.philipp.paris.weatherapp.service.ServiceCallback;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationService.LocationServiceCallback {
     private DrawerLayout drawer;
     private Fragment currentFragment;
     private MenuItem itemSwitchLocation;
+    private LocationService locationService = LocationService.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,38 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         onNavigationItemSelected(navigationView.getMenu().findItem(R.id.nav_dashboard));
+
+        Settings settings = new Settings(getApplicationContext());
+        if (!settings.showHomeLocationData()) {
+            cacheLocationAndUpdateUI();
+        }
     }
 
     private void refreshCurrentFragment() {
         getFragmentManager().beginTransaction().detach(currentFragment)
                 .attach(currentFragment).commit();
+    }
+
+    private void cacheLocationAndUpdateUI() {
+        // reset current location
+        Settings settings = new Settings(getApplicationContext());
+        settings.deleteCurrentLocation();
+        settings.persist();
+
+        locationService.getAddress(getApplicationContext(), new ServiceCallback<Address>() {
+            @Override
+            public void onSuccess(Address data) {
+                Settings settings = new Settings(getApplicationContext());
+                settings.setCurrentLocation(data.getLatitude(), data.getLongitude());
+                settings.persist();
+                refreshCurrentFragment();
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+        }, this);
     }
 
     @Override
@@ -88,6 +117,10 @@ public class MainActivity extends AppCompatActivity
             settings.setShowHomeLocationData(showHomeData);
             settings.persist();
 
+            // cache location in settings
+            if (!settings.showHomeLocationData()) {
+                cacheLocationAndUpdateUI();
+            }
             refreshCurrentFragment();
         }
 
@@ -128,5 +161,15 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawers();
         return true;
+    }
+
+    @Override
+    public void locationDisabled() {
+        locationService.openLocationSettings(getApplicationContext());
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        locationService.requestPermissions(this);
     }
 }
