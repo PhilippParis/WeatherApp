@@ -133,7 +133,8 @@ public class DashBoardFragment extends Fragment {
                 new ServiceCallback<List<ForecastDay>>() {
                     @Override
                     public void onSuccess(List<ForecastDay> data) {
-                        lvForecast.setAdapter(new ForecastDayAdapter(getContext(), data));
+                        lvForecast.setAdapter(new ForecastDayAdapter(getContext(),
+                                Arrays.asList(data.get(0), data.get(1), data.get(2), data.get(3))));
                     }
 
                     @Override

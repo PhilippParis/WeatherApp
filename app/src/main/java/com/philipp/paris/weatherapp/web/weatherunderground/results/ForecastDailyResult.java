@@ -28,7 +28,7 @@ public class ForecastDailyResult {
 
     private static ForecastDay parseForecastDay(JsonObject json) {
         ForecastDay data = new ForecastDay();
-        data.setTime(new Date(json.getAsJsonObject("date").get("epoch").getAsInt() * 1000));
+        data.setTime(new Date(json.getAsJsonObject("date").get("epoch").getAsLong() * 1000));
         data.setTemperatureMin(json.getAsJsonObject("low").get("celsius").getAsFloat());
         data.setTemperature(json.getAsJsonObject("high").get("celsius").getAsFloat());
         data.setIconKey(json.get("icon").getAsString());

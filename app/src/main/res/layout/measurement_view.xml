@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="140dp"
+    android:background="@color/colorPrimaryLigth"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="20dp">
 
     <RelativeLayout
         android:id="@+id/vgError"
@@ -85,6 +87,7 @@
                 android:text="-55.5°C"
                 android:textAlignment="center"
                 android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:textColor="@android:color/black"
                 android:textSize="70sp" />
 
         </RelativeLayout>
@@ -104,6 +107,7 @@
                 android:layout_weight="1"
                 android:text="80 %"
                 android:textAlignment="center"
+                android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
             <TextView
@@ -113,6 +117,7 @@
                 android:layout_weight="1"
                 android:text="1050 mb"
                 android:textAlignment="center"
+                android:textColor="@android:color/black"
                 android:textSize="20sp" />
         </LinearLayout>
 

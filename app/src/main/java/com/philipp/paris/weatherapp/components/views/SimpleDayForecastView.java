@@ -23,7 +23,7 @@ public class SimpleDayForecastView extends LinearLayout {
     private ImageView ivIcon;
     private TextView tvTemperature;
     private TextView tvTemperatureMin;
-    private DateFormat dateFormat = new SimpleDateFormat("E, DD.mm", Locale.getDefault());
+    private DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM", Locale.getDefault());
 
     public SimpleDayForecastView(Context context) {
         super(context);

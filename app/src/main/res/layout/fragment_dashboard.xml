@@ -13,7 +13,7 @@
         <com.philipp.paris.weatherapp.components.views.MeasurementView
             android:id="@+id/measurementView"
             android:layout_width="match_parent"
-            android:layout_height="120dp" />
+            android:layout_height="140dp" />
 
         <com.philipp.paris.weatherapp.components.views.HourlyForecastView
             android:id="@+id/hourlyForecastView"
