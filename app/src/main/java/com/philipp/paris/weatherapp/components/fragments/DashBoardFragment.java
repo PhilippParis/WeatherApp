@@ -7,10 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.views.HourlyForecastView;
 import com.philipp.paris.weatherapp.components.views.MeasurementView;
+import com.philipp.paris.weatherapp.components.views.listadapter.ForecastDayAdapter;
+import com.philipp.paris.weatherapp.domain.ForecastDay;
 import com.philipp.paris.weatherapp.domain.ForecastHour;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Measurement;
@@ -30,6 +33,7 @@ public class DashBoardFragment extends Fragment {
 
     private MeasurementView measurementView;
     private HourlyForecastView hourlyForecastView;
+    private ListView lvForecast;
 
     public DashBoardFragment() {
     }
@@ -49,6 +53,7 @@ public class DashBoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         measurementView = view.findViewById(R.id.measurementView);
         hourlyForecastView = view.findViewById(R.id.hourlyForecastView);
+        lvForecast = view.findViewById(R.id.lvForecast);
 
         measurementService = new MeasurementService(getContext());
         forecastService = new ForecastService();
@@ -68,6 +73,7 @@ public class DashBoardFragment extends Fragment {
         }
 
         getForecastHourly();
+        getForecast();
     }
 
     private void getMeasurementFromDatabase() {
@@ -105,12 +111,29 @@ public class DashBoardFragment extends Fragment {
 
     private void getForecastHourly() {
         Settings settings = new Settings(getContext());
-        forecastService.getHourlyForecast(settings.getCurrentLocationLatitude(),
+        forecastService.getForecastDayHourly(settings.getCurrentLocationLatitude(),
                 settings.getCurrentLocationLongitude(),
                 new ServiceCallback<List<ForecastHour>>() {
                     @Override
                     public void onSuccess(List<ForecastHour> data) {
                         hourlyForecastView.setData(data, DateUtil.getCurrentTime(), DateUtil.getStartEndOfCurrentDay().second);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.e(TAG, t.getMessage());
+                    }
+                });
+    }
+
+    private void getForecast() {
+        Settings settings = new Settings(getContext());
+        forecastService.getForecast10Day(settings.getCurrentLocationLatitude(),
+                settings.getCurrentLocationLongitude(),
+                new ServiceCallback<List<ForecastDay>>() {
+                    @Override
+                    public void onSuccess(List<ForecastDay> data) {
+                        lvForecast.setAdapter(new ForecastDayAdapter(getContext(), data));
                     }
 
                     @Override
