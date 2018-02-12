@@ -1,12 +1,15 @@
 package com.philipp.paris.weatherapp.service;
 
 
-import android.location.Address;
-
 import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.util.Constants;
+import com.philipp.paris.weatherapp.util.DateUtil;
 import com.philipp.paris.weatherapp.web.weatherunderground.WUService;
 import com.philipp.paris.weatherapp.web.weatherunderground.conversion.WUConverterFactory;
+
+import java.util.Calendar;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -18,6 +21,8 @@ import retrofit2.Retrofit;
 public class ForecastService {
     private static final String BASE_URL = "http://api.wunderground.com";
     private WUService service;
+
+    private static Map<String, Measurement> measurementCache = new ConcurrentHashMap<>();
 
     public ForecastService() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -37,15 +42,39 @@ public class ForecastService {
     }
 
     public void getCurrentConditions(double latitude, double longitude, final ServiceCallback<Measurement> callback) {
-        service.conditions(Constants.WU_API_KEY, latitude + "," + longitude).enqueue(new Callback<Measurement>() {
+        final String location = latitude + "," + longitude;
+        if (loadFromMeasurementCache(location, callback)) {
+            return;
+        }
+
+        service.conditions(Constants.WU_API_KEY, location).enqueue(new Callback<Measurement>() {
             @Override
             public void onResponse(Call<Measurement> call, Response<Measurement> response) {
-                callback.onSuccess(response.body());
+                Measurement m = response.body();
+                if (m != null) {
+                    measurementCache.put(location, m);
+                    callback.onSuccess(m);
+                } else {
+                    callback.onError(null);
+                }
             }
             @Override
             public void onFailure(Call<Measurement> call, Throwable t) {
                 callback.onError(t);
             }
         });
+    }
+
+    private boolean loadFromMeasurementCache(String key, ServiceCallback<Measurement> callback) {
+        if (measurementCache.containsKey(key)) {
+            Measurement m = measurementCache.get(key);
+            if (DateUtil.diff(m.getTime(), Calendar.getInstance().getTime(), DateUtil.MINUTE) < 10) {
+                callback.onSuccess(m);
+                return true;
+            } else {
+                measurementCache.remove(key);
+            }
+        }
+        return false;
     }
 }

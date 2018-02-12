@@ -22,6 +22,7 @@
     <string name="error_retrieving_location">Retrieving Location Failed</string>
     <string name="error_no_data">No Data Available</string>
 
+    <string name="home">Home</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 </resources>

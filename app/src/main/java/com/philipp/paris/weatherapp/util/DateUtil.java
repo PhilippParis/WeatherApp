@@ -31,6 +31,10 @@ public class DateUtil {
         return new Pair<>(from, to);
     }
 
+    public static long diff(Date from, Date to, int unit) {
+        return (to.getTime() - from.getTime()) / unit;
+    }
+
     public static Pair<Date, Date> before(Pair<Date, Date> range, int millis) {
         long from = range.first.getTime();
         long to = range.second.getTime();

@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity
         Settings settings = new Settings(getApplicationContext());
         if (!settings.showHomeLocationData()) {
             cacheLocationAndUpdateUI();
+        } else {
+            setTitle(R.string.home);
         }
     }
 
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity
                 settings.setCurrentLocation(data.getLatitude(), data.getLongitude());
                 settings.persist();
                 refreshCurrentFragment();
+                setTitle(data.getLocality());
             }
 
             @Override
@@ -120,6 +123,8 @@ public class MainActivity extends AppCompatActivity
             // cache location in settings
             if (!settings.showHomeLocationData()) {
                 cacheLocationAndUpdateUI();
+            } else {
+                setTitle(R.string.home);
             }
             refreshCurrentFragment();
         }
