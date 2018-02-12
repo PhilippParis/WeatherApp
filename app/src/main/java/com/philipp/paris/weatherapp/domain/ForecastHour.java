@@ -12,7 +12,7 @@ public class ForecastHour {
 
     private Date time;
     private Float temperature;
-    private String iconUrl;
+    private String iconKey;
     private Float qpf;            // quantitative precipitation forecast
     private int wspd;           // wind speed
 
@@ -32,12 +32,12 @@ public class ForecastHour {
         this.temperature = temperature;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
+    public String getIconKey() {
+        return iconKey;
     }
 
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setIconKey(String iconKey) {
+        this.iconKey = iconKey;
     }
 
     public Float getQpf() {

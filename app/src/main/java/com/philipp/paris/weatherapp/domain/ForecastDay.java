@@ -14,7 +14,7 @@ public class ForecastDay {
     private Float temperature;
     private Float temperatureMin;
     private String condition;
-    private String iconUrl;
+    private String iconKey;
     private String text;
 
     public Date getTime() {
@@ -49,12 +49,12 @@ public class ForecastDay {
         this.condition = condition;
     }
 
-    public String getIconUrl() {
-        return iconUrl;
+    public String getIconKey() {
+        return iconKey;
     }
 
-    public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+    public void setIconKey(String iconKey) {
+        this.iconKey = iconKey;
     }
 
     public String getText() {

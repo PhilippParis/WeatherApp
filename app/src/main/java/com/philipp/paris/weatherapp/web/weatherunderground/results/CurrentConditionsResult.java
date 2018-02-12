@@ -11,6 +11,7 @@ public class CurrentConditionsResult {
 
     public static CurrentConditionsResult parse(JsonObject json) {
         Measurement measurement = new Measurement();
+        json = json.getAsJsonObject("current_observation");
         measurement.setTime(new Date(json.get("local_epoch").getAsLong() * 1000));
         measurement.setTemperature(json.get("temp_c").getAsFloat());
         measurement.setHumidity(Float.parseFloat(json.get("relative_humidity").getAsString().replace('%',' ')) / 100f);

@@ -10,8 +10,7 @@ import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.ForecastDay;
-import com.philipp.paris.weatherapp.util.DateUtil;
-import com.philipp.paris.weatherapp.util.DownloadImageTask;
+import com.philipp.paris.weatherapp.util.WeatherIconUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,6 +52,6 @@ public class SimpleDayForecastView extends LinearLayout {
         tvCondition.setText(data.getCondition());
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", data.getTemperature()));
         tvTemperatureMin.setText(String.format(Locale.getDefault(), "%.1f°", data.getTemperatureMin()));
-        new DownloadImageTask(ivIcon).execute(data.getIconUrl());
+        ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getTime(), data.getIconKey()));
     }
 }

@@ -23,7 +23,7 @@ public class ForecastHourlyResult {
         ForecastHour data = new ForecastHour();
         data.setTime(new Date(json.getAsJsonObject("FCTTIME").get("epoch").getAsLong() * 1000));
         data.setTemperature(json.getAsJsonObject("temp").get("metric").getAsFloat());
-        data.setIconUrl(json.get("icon_url").getAsString());
+        data.setIconKey(json.get("icon").getAsString());
         data.setQpf(json.getAsJsonObject("qpf").get("metric").getAsFloat());
         data.setWspd(json.getAsJsonObject("wspd").get("metric").getAsInt());
         return data;

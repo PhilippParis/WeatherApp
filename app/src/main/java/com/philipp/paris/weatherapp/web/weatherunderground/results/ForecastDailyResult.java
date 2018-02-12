@@ -31,7 +31,7 @@ public class ForecastDailyResult {
         data.setTime(new Date(json.getAsJsonObject("date").get("epoch").getAsInt() * 1000));
         data.setTemperatureMin(json.getAsJsonObject("low").get("celsius").getAsFloat());
         data.setTemperature(json.getAsJsonObject("high").get("celsius").getAsFloat());
-        data.setIconUrl(json.get("icon_url").getAsString());
+        data.setIconKey(json.get("icon").getAsString());
         data.setCondition(json.get("conditions").getAsString());
         return data;
     }

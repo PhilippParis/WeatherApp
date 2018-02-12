@@ -35,6 +35,12 @@ public class DateUtil {
         return new Pair<>(from, to);
     }
 
+    public static boolean isNight(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.HOUR_OF_DAY) > 9 && calendar.get(Calendar.HOUR_OF_DAY) < 6;
+    }
+
     public static long diff(Date from, Date to, int unit) {
         return (to.getTime() - from.getTime()) / unit;
     }
