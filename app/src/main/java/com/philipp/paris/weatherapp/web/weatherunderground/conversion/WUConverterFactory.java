@@ -1,6 +1,7 @@
 package com.philipp.paris.weatherapp.web.weatherunderground.conversion;
 
 
+import com.philipp.paris.weatherapp.domain.ForecastHour;
 import com.philipp.paris.weatherapp.domain.Measurement;
 
 import java.lang.annotation.Annotation;
@@ -17,6 +18,9 @@ public class WUConverterFactory extends Converter.Factory {
                                                             Retrofit retrofit) {
         if (type == Measurement.class) {
             return new MeasurementConverter();
+        }
+        if (type == ForecastHour.ForecastHourList.class) {
+            return new ForecastHourListConverter();
         }
         return null;
     }

@@ -13,6 +13,10 @@ public class DateUtil {
     public static final int DAY = 24 * HOUR;
     public static final int WEEK = 7 * DAY;
 
+    public static Date getCurrentTime() {
+        return Calendar.getInstance().getTime();
+    }
+
     public static Pair<Date, Date> getStartEndOfCurrentDay() {
         Calendar from = getCalendarAtStartOfDay();
         Calendar to = getCalendarAtStartOfDay();
