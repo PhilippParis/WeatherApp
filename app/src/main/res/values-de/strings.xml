@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">WetterApp</string>
+    <string name="navigation_drawer_open">Menu öffnen</string>
+    <string name="navigation_drawer_close">Menu schließen</string>
+
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_measurements">Messungen</string>
+    <string name="nav_forecast">Vorhersage</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="nav_set_as_home">Position als \'Home\' festlegen</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="pref_cat_measurement_db">Datenbank</string>
+    <string name="pref_title_db_url">URL</string>
+    <string name="pref_title_db_user">User Name</string>
+    <string name="pref_title_db_pw">Passwort</string>
+
+    <string name="menu_show_home">\'Home\' anzeigen</string>
+    <string name="menu_show_gps">Aktuelle Position anzeigen</string>
+
+    <string name="error_retrieving_measurements">Messungen abrufen fehlgeschlagen</string>
+    <string name="error_retrieving_location">Position abrufen fehlgeschlagen</string>
+    <string name="error_retrieving_forecast">Vorhersage abrufen fehlgeschlagen</string>
+    <string name="error_no_data">Keine Daten verfügbar</string>
+
+    <string name="home">Home</string>
+
+    <string name="title_measurements">Messungen</string>
+    <string name="title_forecast">10 Tages Vorhersage</string>
+    <string name="title_day_forecast">Tages Vorhersage</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+</resources>
