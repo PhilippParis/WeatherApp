@@ -10,13 +10,15 @@ public class Settings {
     private final String KEY_PREF_DB_URL = "pref_key_db_url";
     private final String KEY_PREF_DB_USER = "pref_key_db_user";
     private final String KEY_PREF_DB_PW = "pref_key_db_password";
-    private final String KEY_PREF_HOME = "pref_key_home";
+    private final String KEY_PREF_HOME_LATITUDE = "pref_key_home_latitude";
+    private final String KEY_PREF_HOME_LONGITUDE = "pref_key_home_longitude";
     private final String KEY_PREF_SHOW_HOME = "pref_key_show_home_data";
 
     private String dbUrl;
     private String dbUsername;
     private String dbPassword;
-    private String homeLocation;
+    private Float homeLocationLatitude;
+    private Float homeLocationLongitude;
     private boolean showHomeLocationData;
     private SharedPreferences pref;
 
@@ -25,7 +27,8 @@ public class Settings {
         this.dbUrl = pref.getString(KEY_PREF_DB_URL, "");
         this.dbUsername = pref.getString(KEY_PREF_DB_USER, "");
         this.dbPassword = pref.getString(KEY_PREF_DB_PW, "");
-        this.homeLocation = pref.getString(KEY_PREF_HOME, "");
+        this.homeLocationLatitude = pref.getFloat(KEY_PREF_HOME_LATITUDE, 0f);
+        this.homeLocationLongitude = pref.getFloat(KEY_PREF_HOME_LONGITUDE, 0f);
         this.showHomeLocationData = pref.getBoolean(KEY_PREF_SHOW_HOME, false);
     }
 
@@ -34,7 +37,8 @@ public class Settings {
         editor.putString(KEY_PREF_DB_URL, dbUrl);
         editor.putString(KEY_PREF_DB_USER, dbUsername);
         editor.putString(KEY_PREF_DB_PW, dbPassword);
-        editor.putString(KEY_PREF_HOME, homeLocation);
+        editor.putFloat(KEY_PREF_HOME_LATITUDE, homeLocationLatitude);
+        editor.putFloat(KEY_PREF_HOME_LONGITUDE, homeLocationLongitude);
         editor.putBoolean(KEY_PREF_SHOW_HOME, showHomeLocationData);
         editor.apply();
     }
@@ -63,26 +67,17 @@ public class Settings {
         this.dbPassword = dbPassword;
     }
 
-    public double getHomeLocationLatitude() {
-        if (!homeLocationSet()) {
-            return 0.0;
-        }
-        return Double.valueOf(homeLocation.split(";")[0]);
+    public float getHomeLocationLatitude() {
+        return homeLocationLatitude;
     }
 
-    public double getHomeLocationLongitude() {
-        if (!homeLocationSet()) {
-            return 0.0;
-        }
-        return Double.valueOf(homeLocation.split(";")[1]);
-    }
-
-    public boolean homeLocationSet() {
-        return !homeLocation.isEmpty();
+    public float getHomeLocationLongitude() {
+        return homeLocationLongitude;
     }
 
     public void setHomeLocation(double latitude, double longitude) {
-        this.homeLocation = latitude + "," + longitude;
+        this.homeLocationLatitude = (float) latitude;
+        this.homeLocationLongitude = (float) longitude;
     }
 
     public boolean showHomeLocationData() {

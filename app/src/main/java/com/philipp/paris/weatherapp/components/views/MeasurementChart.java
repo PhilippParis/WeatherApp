@@ -32,7 +32,7 @@ public class MeasurementChart extends GridLayout {
     private static final float CORRECTION_FACTOR_WEEK = 100000f / (24f*60f*60f);
     private static final float CORRECTION_FACTOR_DAY = 1;
 
-    private String[] colors = {"#B71C1C", "#311B92", "#01579B", "#1B5E20", "#E65100"};
+    private String[] colors = {"#FF303F9F", "#311B92", "#01579B", "#1B5E20", "#E65100"};
 
     public enum Scope {DAY, WEEK}
 

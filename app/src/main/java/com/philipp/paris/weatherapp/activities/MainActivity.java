@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity
 
     private void getCurrentLocationAndUpdateUI() {
         if (new Settings().showHomeLocationData()) {
-            getGPSLocationAndUpdateUI();
-        } else {
             getHomeLocationAndUpdateUI();
+        } else {
+            getGPSLocationAndUpdateUI();
         }
     }
 
