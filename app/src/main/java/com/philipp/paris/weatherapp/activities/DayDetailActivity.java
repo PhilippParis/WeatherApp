@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
@@ -39,6 +40,8 @@ public class DayDetailActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ForecastService forecastService = ForecastService.getInstance();
+    private ViewGroup vgError;
+    private ProgressBar progressBar;
 
     private List<ForecastDay> forecastDays;
     private List<ForecastHour> forecastHours;
@@ -53,13 +56,14 @@ public class DayDetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = findViewById(R.id.container);
+        vgError = findViewById(R.id.vgError);
+        progressBar = findViewById(R.id.progressBar);
 
         showProgressBar();
         getData();
     }
 
     private void getData() {
-        Settings settings = new Settings();
         forecastService.getForecast10DayHourly(
                 new ServiceCallback<List<ForecastHour>>() {
                     @Override
@@ -95,17 +99,25 @@ public class DayDetailActivity extends AppCompatActivity {
     }
 
     private void showError() {
-
+        progressBar.setVisibility(View.GONE);
+        vgError.setVisibility(View.VISIBLE);
+        mViewPager.setVisibility(View.GONE);
     }
 
     private void showProgressBar() {
-
+        progressBar.setVisibility(View.VISIBLE);
+        vgError.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.GONE);
     }
 
     private void showPager() {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), forecastDays, forecastHours);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(getIntent().getIntExtra(PAGER_POSITION, 0));
+
+        progressBar.setVisibility(View.GONE);
+        vgError.setVisibility(View.GONE);
+        mViewPager.setVisibility(View.VISIBLE);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
