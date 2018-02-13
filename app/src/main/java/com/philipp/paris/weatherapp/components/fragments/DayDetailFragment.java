@@ -83,8 +83,7 @@ public class DayDetailFragment extends Fragment {
         tvText.setText(forecastDay.getText());
         ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), forecastDay.getIconKey()));
 
-        Pair<Date, Date> range = DateUtil.getStartEndOfDay(forecastDay.getTime());
-        hourlyForecastView.setData(forecastHours, range.first, range.second);
+        hourlyForecastView.setData(forecastHours);
     }
 
 }

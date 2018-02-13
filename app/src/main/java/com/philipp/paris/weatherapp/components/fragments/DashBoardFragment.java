@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,6 +28,8 @@ import com.philipp.paris.weatherapp.service.MeasurementService;
 import com.philipp.paris.weatherapp.util.DateUtil;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
@@ -83,6 +86,17 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
         getForecast();
     }
 
+    private void updateDayForecastView(List<ForecastDay> data) {
+        lvForecast.setAdapter(new ForecastDayAdapter(getContext(),
+                Arrays.asList(data.get(0), data.get(1), data.get(2), data.get(3))));
+    }
+
+    private void updateHourForecastView(List<ForecastHour> data) {
+        Pair<Date, Date> range = DateUtil.after(DateUtil.getStartEndOfCurrentDay(), 6 * DateUtil.HOUR);
+        Date current = DateUtil.getCurrentTime();
+        hourlyForecastView.setData(data, current.after(range.first) ? current : range.first, range.second);
+    }
+
     private void getMeasurementFromDatabase() {
         measurementService.getMeasurementsToday(new ServiceCallback<List<Measurement>>() {
             @Override
@@ -119,7 +133,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
                 new ServiceCallback<List<ForecastHour>>() {
                     @Override
                     public void onSuccess(List<ForecastHour> data) {
-                        hourlyForecastView.setData(data, DateUtil.getCurrentTime(), DateUtil.getStartEndOfCurrentDay().second);
+                        updateHourForecastView(data);
                     }
 
                     @Override
@@ -134,8 +148,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
                 new ServiceCallback<List<ForecastDay>>() {
                     @Override
                     public void onSuccess(List<ForecastDay> data) {
-                        lvForecast.setAdapter(new ForecastDayAdapter(getContext(),
-                                Arrays.asList(data.get(0), data.get(1), data.get(2), data.get(3))));
+                        updateDayForecastView(data);
                     }
 
                     @Override

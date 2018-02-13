@@ -75,6 +75,12 @@ public class HourlyForecastView extends GridLayout {
                 layoutBase.addView(new Item(getContext(), forecastHour));
             }
         }
+    }
 
+    public void setData(List<ForecastHour> data) {
+        layoutBase.removeAllViews();
+        for (ForecastHour forecastHour : data) {
+            layoutBase.addView(new Item(getContext(), forecastHour));
+        }
     }
 }

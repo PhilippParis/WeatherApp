@@ -138,7 +138,7 @@ public class DayDetailActivity extends AppCompatActivity {
 
         private ArrayList<ForecastHour> getForecastHoursOfDay(ForecastDay day) {
             ArrayList<ForecastHour> hours = new ArrayList<>();
-            Pair<Date, Date> range = DateUtil.getStartEndOfDay(day.getTime());
+            Pair<Date, Date> range = DateUtil.after(DateUtil.getStartEndOfDay(day.getTime()), 6 * DateUtil.HOUR);
             for (ForecastHour hour : forecastHours) {
                 if (hour.getTime().after(range.first) && hour.getTime().before(range.second)) {
                     hours.add(hour);
