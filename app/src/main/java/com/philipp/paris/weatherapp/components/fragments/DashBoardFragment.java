@@ -1,5 +1,6 @@
 package com.philipp.paris.weatherapp.components.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
@@ -8,9 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.philipp.paris.weatherapp.R;
+import com.philipp.paris.weatherapp.activities.DayDetailActivity;
 import com.philipp.paris.weatherapp.components.views.HourlyForecastView;
 import com.philipp.paris.weatherapp.components.views.MeasurementView;
 import com.philipp.paris.weatherapp.components.views.listadapter.ForecastDayAdapter;
@@ -26,7 +29,8 @@ import com.philipp.paris.weatherapp.util.DateUtil;
 import java.util.Arrays;
 import java.util.List;
 
-public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener {
     private static final String TAG = "DashBoardFragment";
 
     private MeasurementService measurementService = MeasurementService.getInstance();
@@ -58,6 +62,8 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
         lvForecast = view.findViewById(R.id.lvForecast);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        lvForecast.setOnItemClickListener(this);
     }
 
     @Override
@@ -151,5 +157,12 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
         forecastService.clearCache();
         swipeRefreshLayout.setRefreshing(false);
         onStart();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent intent = new Intent(getActivity(), DayDetailActivity.class);
+        intent.putExtra(DayDetailActivity.PAGER_POSITION, i);
+        startActivity(intent);
     }
 }

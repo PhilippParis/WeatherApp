@@ -1,0 +1,102 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.philipp.paris.weatherapp.activities.DayDetailActivity$PlaceholderFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textAlignment="textStart"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            android:background="@color/colorPrimaryLigth"
+            android:gravity="left|fill"
+            android:paddingLeft="10dp">
+
+            <RelativeLayout
+                android:id="@+id/layoutMinMaxTemp"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentLeft="true"
+                android:paddingBottom="15dp"
+                android:paddingTop="20dp">
+
+                <TextView
+                    android:id="@+id/tvTemperatureMin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="7°"
+                    android:textAlignment="textEnd"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimaryDark" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvTemperature"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:gravity="bottom"
+                android:paddingLeft="45dp"
+                android:paddingRight="20dp"
+                android:text="-55.5°"
+                android:textAlignment="textStart"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:textColor="@android:color/black"
+                android:textSize="70sp" />
+
+
+            <ImageView
+                android:id="@+id/ivIcon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/clear" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryLigth"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:text="TextView" />
+
+        <com.philipp.paris.weatherapp.components.views.HourlyForecastView
+            android:id="@+id/hourlyForecastView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

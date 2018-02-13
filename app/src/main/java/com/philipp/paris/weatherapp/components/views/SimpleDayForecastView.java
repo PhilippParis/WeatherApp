@@ -52,6 +52,6 @@ public class SimpleDayForecastView extends LinearLayout {
         tvCondition.setText(data.getCondition());
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", data.getTemperature()));
         tvTemperatureMin.setText(String.format(Locale.getDefault(), "%.1f°", data.getTemperatureMin()));
-        ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getTime(), data.getIconKey()));
+        ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getIconKey(), data.getTime()));
     }
 }

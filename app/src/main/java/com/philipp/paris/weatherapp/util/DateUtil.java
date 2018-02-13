@@ -17,15 +17,22 @@ public class DateUtil {
         return Calendar.getInstance().getTime();
     }
 
+    public static Pair<Date, Date> getStartEndOfDay(Date day) {
+        Calendar from = getCalendarAtStartOfDay(day);
+        Calendar to = getCalendarAtStartOfDay(day);
+        to.add(Calendar.DAY_OF_YEAR, 1);
+        return new Pair<>(from.getTime(), to.getTime());
+    }
+
     public static Pair<Date, Date> getStartEndOfCurrentDay() {
-        Calendar from = getCalendarAtStartOfDay();
-        Calendar to = getCalendarAtStartOfDay();
+        Calendar from = getCalendarAtStartOfDay(getCurrentTime());
+        Calendar to = getCalendarAtStartOfDay(getCurrentTime());
         to.add(Calendar.DAY_OF_YEAR, 1);
         return new Pair<>(from.getTime(), to.getTime());
     }
 
     public static Pair<Date, Date> getStartEndOfCurrentWeek() {
-        Calendar calendar = getCalendarAtStartOfDay();
+        Calendar calendar = getCalendarAtStartOfDay(getCurrentTime());
         calendar.add(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek() - calendar.get(Calendar.DAY_OF_WEEK));
         Date from = calendar.getTime();
 
@@ -57,8 +64,9 @@ public class DateUtil {
         return new Pair<>(new Date(from + millis), new Date(to + millis));
     }
 
-    private static Calendar getCalendarAtStartOfDay() {
+    private static Calendar getCalendarAtStartOfDay(Date day) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

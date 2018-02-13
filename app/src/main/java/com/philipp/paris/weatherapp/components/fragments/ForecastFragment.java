@@ -1,6 +1,7 @@
 package com.philipp.paris.weatherapp.components.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
@@ -9,9 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.philipp.paris.weatherapp.R;
+import com.philipp.paris.weatherapp.activities.DayDetailActivity;
 import com.philipp.paris.weatherapp.components.views.listadapter.ForecastDayAdapter;
 import com.philipp.paris.weatherapp.domain.ForecastDay;
 import com.philipp.paris.weatherapp.domain.Settings;
@@ -25,7 +28,8 @@ import java.util.List;
  * Use the {@link ForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener {
     private static final String TAG = "ForecastFragment";
     private ListView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -56,6 +60,8 @@ public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnR
         listView = view.findViewById(R.id.listView);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        listView.setOnItemClickListener(this);
     }
 
 
@@ -82,5 +88,12 @@ public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnR
         forecastService.clearCache();
         swipeRefreshLayout.setRefreshing(false);
         onStart();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        Intent intent = new Intent(getActivity(), DayDetailActivity.class);
+        intent.putExtra(DayDetailActivity.PAGER_POSITION, i);
+        startActivity(intent);
     }
 }

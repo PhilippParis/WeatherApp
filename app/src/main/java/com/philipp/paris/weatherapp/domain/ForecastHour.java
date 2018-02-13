@@ -1,15 +1,12 @@
 package com.philipp.paris.weatherapp.domain;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ForecastHour {
-    public static class ForecastHourList {
-        public List<ForecastHour> hours = new ArrayList<>();
-    }
-
+public class ForecastHour implements Serializable {
     private Date time;
     private Float temperature;
     private String iconKey;

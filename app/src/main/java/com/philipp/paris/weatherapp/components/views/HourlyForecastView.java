@@ -44,7 +44,7 @@ public class HourlyForecastView extends GridLayout {
 
             tvTime.setText(dateFormat.format(data.getTime()));
             tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", data.getTemperature()));
-            ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getTime(), data.getIconKey()));
+            ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getIconKey(), data.getTime()));
         }
     }
 
