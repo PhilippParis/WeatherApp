@@ -1,11 +1,10 @@
 package com.philipp.paris.weatherapp.domain;
 
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.net.URL;
+import com.philipp.paris.weatherapp.WeatherApp;
 
 public class Settings {
     private final String KEY_PREF_DB_URL = "pref_key_db_url";
@@ -23,8 +22,8 @@ public class Settings {
     private boolean showHomeLocationData;
     private SharedPreferences pref;
 
-    public Settings(Context context) {
-        pref = PreferenceManager.getDefaultSharedPreferences(context);
+    public Settings() {
+        pref = PreferenceManager.getDefaultSharedPreferences(WeatherApp.getAppContext());
         this.dbUrl = pref.getString(KEY_PREF_DB_URL, "");
         this.dbUsername = pref.getString(KEY_PREF_DB_USER, "");
         this.dbPassword = pref.getString(KEY_PREF_DB_PW, "");

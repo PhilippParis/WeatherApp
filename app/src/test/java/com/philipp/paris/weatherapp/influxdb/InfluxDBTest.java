@@ -3,7 +3,6 @@ package com.philipp.paris.weatherapp.influxdb;
 import com.philipp.paris.weatherapp.influxdb.util.TestCallback;
 import com.philipp.paris.weatherapp.influxdb.util.TestDataUtil;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDB;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDBFactory;
 import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQuery;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;

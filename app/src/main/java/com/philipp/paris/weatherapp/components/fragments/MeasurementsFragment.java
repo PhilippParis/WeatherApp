@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +25,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class MeasurementsFragment extends Fragment implements View.OnClickListener, ServiceCallback<List<Measurement>> {
+public class MeasurementsFragment extends Fragment implements View.OnClickListener,
+        ServiceCallback<List<Measurement>>, SwipeRefreshLayout.OnRefreshListener {
 
     private MeasurementChart chart;
     private ImageButton btnLeft;
     private ImageButton btnRight;
     private TextView tvScope;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    private MeasurementService service;
+    private MeasurementService service = MeasurementService.getInstance();
 
     private MeasurementChart.Scope scope = MeasurementChart.Scope.DAY;
     private Pair<Date, Date> range;
@@ -57,12 +60,12 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
         btnLeft = view.findViewById(R.id.btnLeft);
         btnRight = view.findViewById(R.id.btnRight);
         tvScope = view.findViewById(R.id.tvScope);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         btnLeft.setOnClickListener(this);
         btnRight.setOnClickListener(this);
         tvScope.setOnClickListener(this);
-
-        service = new MeasurementService(getContext());
     }
 
     @Override
@@ -138,5 +141,12 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
             txt += " - " + dateFormat.format(range.second);
         }
         tvScope.setText(txt);
+    }
+
+    @Override
+    public void onRefresh() {
+        service.clearCache();
+        swipeRefreshLayout.setRefreshing(false);
+        onStart();
     }
 }

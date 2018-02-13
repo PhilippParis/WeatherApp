@@ -16,29 +16,38 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 
+import com.philipp.paris.weatherapp.WeatherApp;
+
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
+
 public class LocationService {
     public static int REQUEST_LOCATION_PERMISSION_CODE = 1;
+    private static LocationService instance;
 
     public interface LocationServiceCallback {
         void locationDisabled();
         void insufficientPermissions();
     }
 
-    private static LocationService service;
+
     public static LocationService getInstance() {
-        if (service == null) {
-            service = new LocationService();
+        if (instance == null) {
+            instance = new LocationService();
         }
-        return service;
+        return instance;
     }
 
-    public void getAddress(final Context context, final ServiceCallback<Address> callback, final LocationServiceCallback lCallback) {
-        final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    private LocationService() {
+
+    }
+
+    public void getAddress(final ServiceCallback<Address> callback, final LocationServiceCallback lCallback) {
+        final LocationManager lm = (LocationManager) WeatherApp.getAppContext().getSystemService(Context.LOCATION_SERVICE);
 
         // check if location is enabled
         if (lm == null || !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -47,7 +56,7 @@ public class LocationService {
         }
 
         // check permissions
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(WeatherApp.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             lCallback.insufficientPermissions();
             return;
         }
@@ -55,7 +64,7 @@ public class LocationService {
         // use last known location
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null && location.getTime() > Calendar.getInstance().getTimeInMillis() - 2 * 60 * 1000) {
-            callback.onSuccess(locationToAddress(context, location));
+            callback.onSuccess(locationToAddress(location));
             return;
         }
 
@@ -64,7 +73,7 @@ public class LocationService {
             @Override
             public void onLocationChanged(Location location) {
                 if (location != null) {
-                    callback.onSuccess(locationToAddress(context, location));
+                    callback.onSuccess(locationToAddress(location));
                 } else {
                     callback.onError(null);
                 }
@@ -78,8 +87,8 @@ public class LocationService {
         }, null);
     }
 
-    public void openLocationSettings(Context context) {
-        context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+    public void openLocationSettings(Activity activity) {
+        activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
 
     public void requestPermissions(Activity activity) {
@@ -87,8 +96,8 @@ public class LocationService {
                 LocationService.REQUEST_LOCATION_PERMISSION_CODE);
     }
 
-    private Address locationToAddress(Context context, Location location) {
-        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+    private Address locationToAddress(Location location) {
+        Geocoder geocoder = new Geocoder(WeatherApp.getAppContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
             if (addresses.size() > 0) {

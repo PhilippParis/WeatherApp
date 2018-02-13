@@ -1,9 +1,9 @@
 package com.philipp.paris.weatherapp.service;
 
-import android.content.Context;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.philipp.paris.weatherapp.WeatherApp;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.util.DateUtil;
@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+
 public class MeasurementService {
     private static final String TAG = "MeasurementService";
     private static final String DB_NAME = "db";
-    private Context context;
+    private static MeasurementService instance;
 
     private class InfluxDBCallback implements com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback {
         private ServiceCallback<List<Measurement>> callback;
@@ -31,8 +33,9 @@ public class MeasurementService {
             try {
                 if (result == null || result.seriesCount() == 0) {
                     callback.onSuccess(new ArrayList<Measurement>());
+                } else {
+                    callback.onSuccess(result.getSeries(0).toObject(Measurement.class));
                 }
-                callback.onSuccess(result.getSeries(0).toObject(Measurement.class));
             } catch (Exception e) {
                 callback.onError(e);
             }
@@ -43,8 +46,21 @@ public class MeasurementService {
         }
     }
 
-    public MeasurementService(Context context)  {
-        this.context = context;
+    public static MeasurementService getInstance() {
+        if (instance == null) {
+            instance = new MeasurementService();
+        }
+        return instance;
+    }
+
+    private MeasurementService() {
+
+    }
+
+    public void clearCache() {
+        Settings settings = new Settings();
+        InfluxDBFactory.get(DB_NAME, settings.getDbUrl(),
+                settings.getDbUsername(), settings.getDbPassword()).clearCache();
     }
 
     public void getMeasurementsToday(final ServiceCallback<List<Measurement>> callback) {
@@ -74,9 +90,10 @@ public class MeasurementService {
     }
 
     private InfluxDB getDB(ServiceCallback<List<Measurement>> callback) {
-        Settings settings = new Settings(context);
+        Settings settings = new Settings();
         try {
-            return InfluxDBFactory.getInstance(DB_NAME, settings.getDbUrl(), settings.getDbUsername(), settings.getDbPassword());
+            return InfluxDBFactory.get(DB_NAME, settings.getDbUrl(),
+                    settings.getDbUsername(), settings.getDbPassword());
         } catch (IllegalArgumentException e) {
             callback.onError(e);
             return null;

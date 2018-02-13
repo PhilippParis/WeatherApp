@@ -1,11 +1,20 @@
 package com.philipp.paris.weatherapp.web.influxdb;
 
 
-import java.net.MalformedURLException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class InfluxDBFactory {
-    static public InfluxDB getInstance(String dbName, String url, String user, String password) throws IllegalArgumentException {
-        return new InfluxDB(dbName, url, user, password);
+    private static Map<String, InfluxDB> instances = new HashMap<>();
+
+    public static InfluxDB get(String dbName, String url, String user, String password) {
+        String key = dbName + "@" + url + ";" + user + ":" + password;
+        if (instances.containsKey(key)) {
+            return instances.get(key);
+        }
+
+        InfluxDB instance = new InfluxDB(dbName, url, user, password);
+        instances.put(key, instance);
+        return instance;
     }
 }

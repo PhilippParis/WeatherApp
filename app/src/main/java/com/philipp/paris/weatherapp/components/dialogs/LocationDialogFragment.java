@@ -61,7 +61,7 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
     }
 
     private void persist() {
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
         settings.setHomeLocation(address.getLatitude(), address.getLongitude());
         settings.persist();
     }
@@ -88,7 +88,7 @@ public class LocationDialogFragment extends DialogFragment implements DialogInte
     }
 
     private void getLocation() {
-        locationService.getAddress(getContext(), new ServiceCallback<Address>() {
+        locationService.getAddress(new ServiceCallback<Address>() {
             @Override
             public void onSuccess(Address address) {
                 showLocation(address);

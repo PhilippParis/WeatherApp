@@ -4,6 +4,7 @@ package com.philipp.paris.weatherapp.components.fragments;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +25,11 @@ import java.util.List;
  * Use the {@link ForecastFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "ForecastFragment";
-    ListView listView;
-    ForecastService forecastService;
+    private ListView listView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ForecastService forecastService = ForecastService.getInstance();
 
     public ForecastFragment() {
         // Required empty public constructor
@@ -52,15 +54,15 @@ public class ForecastFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         listView = view.findViewById(R.id.listView);
-
-        forecastService = new ForecastService();
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
 
     @Override
     public void onStart() {
         super.onStart();
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
         forecastService.getForecast10Day(settings.getCurrentLocationLatitude(),
                 settings.getCurrentLocationLongitude(), new ServiceCallback<List<ForecastDay>>() {
                     @Override
@@ -75,4 +77,10 @@ public class ForecastFragment extends Fragment {
                 });
     }
 
+    @Override
+    public void onRefresh() {
+        forecastService.clearCache();
+        swipeRefreshLayout.setRefreshing(false);
+        onStart();
+    }
 }

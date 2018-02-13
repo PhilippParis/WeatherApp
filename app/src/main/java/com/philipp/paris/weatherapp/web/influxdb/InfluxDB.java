@@ -1,8 +1,17 @@
 package com.philipp.paris.weatherapp.web.influxdb;
 
 import android.util.Log;
+
+import com.philipp.paris.weatherapp.WeatherApp;
+import com.philipp.paris.weatherapp.service.caching.OfflineRequestCacheInterceptor;
+import com.philipp.paris.weatherapp.service.caching.ResponseCacheInterceptor;
 import com.philipp.paris.weatherapp.web.influxdb.conversion.InfluxDBConverterFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+
+import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -15,21 +24,30 @@ public class InfluxDB {
     private static final String TAG = "InfluxDB";
     private String dbName;
     private InfluxDBService service;
+    private Cache cache;
+    private String baseUrl;
 
     InfluxDB(String dbName, String url, String user, String password) {
         this.dbName = dbName;
+        this.baseUrl = url;
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
+        cache = new okhttp3.Cache(new File(WeatherApp.getAppContext().getCacheDir(),
+                "HTTP"), (long) 5 * 1024 * 1024);
+
         OkHttpClient httpClient = new OkHttpClient.Builder()
-                .addInterceptor(new AuthenticationInterceptor(Credentials.basic(user, password)))
+                .cache(cache)
                 .addInterceptor(interceptor)
+                .addNetworkInterceptor(new ResponseCacheInterceptor())
+                .addInterceptor(new OfflineRequestCacheInterceptor())
+                .addInterceptor(new AuthenticationInterceptor(Credentials.basic(user, password)))
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(httpClient)
-                .baseUrl(url)
+                .baseUrl(baseUrl)
                 .addConverterFactory(new InfluxDBConverterFactory())
                 .build();
 
@@ -50,6 +68,19 @@ public class InfluxDB {
                 callback.onFailure(t);
             }
         });
+    }
+
+    public void clearCache() {
+        try {
+            Iterator<String> it = cache.urls();
+            while (it.hasNext()) {
+                if (it.next().startsWith(baseUrl)) {
+                    it.remove();
+                }
+            }
+        } catch (IOException e) {
+            Log.e("InfluxDB", "clearing cache failed");
+        }
     }
 
 }

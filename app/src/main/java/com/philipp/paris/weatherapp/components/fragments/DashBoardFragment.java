@@ -3,6 +3,7 @@ package com.philipp.paris.weatherapp.components.fragments;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,15 +26,16 @@ import com.philipp.paris.weatherapp.util.DateUtil;
 import java.util.Arrays;
 import java.util.List;
 
-public class DashBoardFragment extends Fragment {
+public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private static final String TAG = "DashBoardFragment";
 
-    private MeasurementService measurementService;
-    private ForecastService forecastService;
+    private MeasurementService measurementService = MeasurementService.getInstance();
+    private ForecastService forecastService = ForecastService.getInstance();
 
     private MeasurementView measurementView;
     private HourlyForecastView hourlyForecastView;
     private ListView lvForecast;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public DashBoardFragment() {
     }
@@ -54,15 +56,14 @@ public class DashBoardFragment extends Fragment {
         measurementView = view.findViewById(R.id.measurementView);
         hourlyForecastView = view.findViewById(R.id.hourlyForecastView);
         lvForecast = view.findViewById(R.id.lvForecast);
-
-        measurementService = new MeasurementService(getContext());
-        forecastService = new ForecastService();
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
 
         if (settings.showHomeLocationData()) {
             getMeasurementFromDatabase();
@@ -92,7 +93,7 @@ public class DashBoardFragment extends Fragment {
     }
 
     private void getMeasurementFromForecastService() {
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
         forecastService.getCurrentConditions(settings.getCurrentLocationLatitude(),
                 settings.getCurrentLocationLongitude(),
                 new ServiceCallback<Measurement>() {
@@ -110,7 +111,7 @@ public class DashBoardFragment extends Fragment {
     }
 
     private void getForecastHourly() {
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
         forecastService.getForecastDayHourly(settings.getCurrentLocationLatitude(),
                 settings.getCurrentLocationLongitude(),
                 new ServiceCallback<List<ForecastHour>>() {
@@ -127,7 +128,7 @@ public class DashBoardFragment extends Fragment {
     }
 
     private void getForecast() {
-        Settings settings = new Settings(getContext());
+        Settings settings = new Settings();
         forecastService.getForecast10Day(settings.getCurrentLocationLatitude(),
                 settings.getCurrentLocationLongitude(),
                 new ServiceCallback<List<ForecastDay>>() {
@@ -142,5 +143,13 @@ public class DashBoardFragment extends Fragment {
                         Log.e(TAG, t.getMessage());
                     }
                 });
+    }
+
+    @Override
+    public void onRefresh() {
+        measurementService.clearCache();
+        forecastService.clearCache();
+        swipeRefreshLayout.setRefreshing(false);
+        onStart();
     }
 }
