@@ -60,7 +60,7 @@ public class DayDetailActivity extends AppCompatActivity {
 
     private void getData() {
         Settings settings = new Settings();
-        forecastService.getForecast10DayHourly(settings.getCurrentLocationLatitude(), settings.getCurrentLocationLongitude(),
+        forecastService.getForecast10DayHourly(
                 new ServiceCallback<List<ForecastHour>>() {
                     @Override
                     public void onSuccess(List<ForecastHour> data) {
@@ -78,7 +78,7 @@ public class DayDetailActivity extends AppCompatActivity {
 
     private void getForecast10Day() {
         Settings settings = new Settings();
-        forecastService.getForecast10Day(settings.getCurrentLocationLatitude(), settings.getCurrentLocationLongitude(),
+        forecastService.getForecast10Day(
                 new ServiceCallback<List<ForecastDay>>() {
                     @Override
                     public void onSuccess(List<ForecastDay> data) {

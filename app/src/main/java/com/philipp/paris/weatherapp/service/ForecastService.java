@@ -34,6 +34,8 @@ public class ForecastService {
     private static ForecastService instance;
     private WUService service;
     private Cache cache;
+    private double latitude;
+    private double longitude;
 
     public static ForecastService getInstance() {
         if (instance == null) {
@@ -64,6 +66,24 @@ public class ForecastService {
         service = retrofit.create(WUService.class);
     }
 
+    public boolean currentLocationSet() {
+        return this.longitude != 0.0 && this.latitude != 0.0;
+    }
+
+    public void deleteCurrentLocation() {
+        synchronized (this) {
+            this.latitude = 0.0;
+            this.longitude = 0.0;
+        }
+    }
+
+    public void setCurrentLocation(double latitude, double longitude) {
+        synchronized (this) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+    }
+
     public void clearCache() {
         try {
             Iterator<String> it = cache.urls();
@@ -77,7 +97,7 @@ public class ForecastService {
         }
     }
 
-    public void getCurrentConditions(double latitude, double longitude, final ServiceCallback<Measurement> callback) {
+    public void getCurrentConditions(final ServiceCallback<Measurement> callback) {
         final String location = latitude + "," + longitude;
         service.currentConditions(Constants.WU_API_KEY, location).enqueue(new Callback<CurrentConditionsResult>() {
             @Override
@@ -95,7 +115,7 @@ public class ForecastService {
         });
     }
 
-    public void getForecastDayHourly(double latitude, double longitude, final ServiceCallback<List<ForecastHour>> callback) {
+    public void getForecastDayHourly(final ServiceCallback<List<ForecastHour>> callback) {
         final String location = latitude + "," + longitude;
         service.forecastDayHourly(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastHourlyResult>() {
             @Override
@@ -114,7 +134,7 @@ public class ForecastService {
         });
     }
 
-    public void getForecast10Day(double latitude, double longitude, final ServiceCallback<List<ForecastDay>> callback) {
+    public void getForecast10Day(final ServiceCallback<List<ForecastDay>> callback) {
         final String location = latitude + "," + longitude;
         service.forecast10Day(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastDailyResult>() {
             @Override
@@ -133,7 +153,7 @@ public class ForecastService {
         });
     }
 
-    public void getForecast10DayHourly(double latitude, double longitude, final ServiceCallback<List<ForecastHour>> callback) {
+    public void getForecast10DayHourly(final ServiceCallback<List<ForecastHour>> callback) {
         final String location = latitude + "," + longitude;
         service.forecast10DayHourly(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastHourlyResult>() {
             @Override

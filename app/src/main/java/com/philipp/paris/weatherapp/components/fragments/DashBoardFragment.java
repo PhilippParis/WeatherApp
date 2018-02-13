@@ -73,7 +73,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
 
         if (settings.showHomeLocationData()) {
             getMeasurementFromDatabase();
-        } else if (settings.currentLocationSet()) {
+        } else if (forecastService.currentLocationSet()) {
             getMeasurementFromForecastService();
         } else {
             measurementView.showProgressBar();
@@ -99,9 +99,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void getMeasurementFromForecastService() {
-        Settings settings = new Settings();
-        forecastService.getCurrentConditions(settings.getCurrentLocationLatitude(),
-                settings.getCurrentLocationLongitude(),
+        forecastService.getCurrentConditions(
                 new ServiceCallback<Measurement>() {
                     @Override
                     public void onSuccess(Measurement data) {
@@ -117,9 +115,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void getForecastHourly() {
-        Settings settings = new Settings();
-        forecastService.getForecastDayHourly(settings.getCurrentLocationLatitude(),
-                settings.getCurrentLocationLongitude(),
+        forecastService.getForecastDayHourly(
                 new ServiceCallback<List<ForecastHour>>() {
                     @Override
                     public void onSuccess(List<ForecastHour> data) {
@@ -134,9 +130,7 @@ public class DashBoardFragment extends Fragment implements SwipeRefreshLayout.On
     }
 
     private void getForecast() {
-        Settings settings = new Settings();
-        forecastService.getForecast10Day(settings.getCurrentLocationLatitude(),
-                settings.getCurrentLocationLongitude(),
+        forecastService.getForecast10Day(
                 new ServiceCallback<List<ForecastDay>>() {
                     @Override
                     public void onSuccess(List<ForecastDay> data) {

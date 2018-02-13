@@ -68,9 +68,7 @@ public class ForecastFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onStart() {
         super.onStart();
-        Settings settings = new Settings();
-        forecastService.getForecast10Day(settings.getCurrentLocationLatitude(),
-                settings.getCurrentLocationLongitude(), new ServiceCallback<List<ForecastDay>>() {
+        forecastService.getForecast10Day(new ServiceCallback<List<ForecastDay>>() {
                     @Override
                     public void onSuccess(List<ForecastDay> data) {
                         listView.setAdapter(new ForecastDayAdapter(getContext(), data));
