@@ -2,16 +2,17 @@ package com.philipp.paris.weatherapp.domain;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ForecastHour implements Serializable {
     private Date time;
     private Float temperature;
     private String iconKey;
-    private Float qpf;            // quantitative precipitation forecast
-    private int wspd;           // wind speed
+    private Float snow;             // quantitative snow forecast
+    private Float qpf;              // quantitative precipitation forecast
+    private Float pop;              // precipitation probability
+    private int wspd;               // wind speed
+    private int windDirection;      // wind direction in degree
 
     public Date getTime() {
         return time;
@@ -51,5 +52,29 @@ public class ForecastHour implements Serializable {
 
     public void setWspd(int wspd) {
         this.wspd = wspd;
+    }
+
+    public int getWindDirection() {
+        return windDirection;
+    }
+
+    public void setWindDirection(int windDirection) {
+        this.windDirection = windDirection;
+    }
+
+    public Float getPop() {
+        return pop;
+    }
+
+    public void setPop(Float pop) {
+        this.pop = pop;
+    }
+
+    public Float getSnow() {
+        return snow;
+    }
+
+    public void setSnow(Float snow) {
+        this.snow = snow;
     }
 }

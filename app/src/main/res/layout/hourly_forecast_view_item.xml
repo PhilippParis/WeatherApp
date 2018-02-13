@@ -1,29 +1,89 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:id="@+id/background"
+    android:layout_width="70dp"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp"
-    android:orientation="vertical">
+    android:duplicateParentState="true"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
 
-    <TextView
-        android:id="@+id/tvTemperature"
+    <LinearLayout
+        android:id="@+id/vgTemperature"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textColor="@android:color/black"
-        android:textSize="14sp" />
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <ImageView
-        android:id="@+id/ivIcon"
+        <TextView
+            android:id="@+id/tvTemperature"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            app:srcCompat="@drawable/ic_sunny" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vgPrecipitation"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        app:srcCompat="@drawable/ic_sunny" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvProbability"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="TextView"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tvPrecipitation"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/vgWind"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvWindSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:text="TextView"
+            android:textAlignment="center" />
+
+        <ImageView
+            android:id="@+id/ivWindDir"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:rotation="0"
+            app:srcCompat="@drawable/ic_arrow_downward" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvTime"
@@ -33,4 +93,5 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center" />
+
 </LinearLayout>

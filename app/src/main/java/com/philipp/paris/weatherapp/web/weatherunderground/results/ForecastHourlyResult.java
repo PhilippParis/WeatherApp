@@ -25,7 +25,10 @@ public class ForecastHourlyResult {
         data.setTemperature(json.getAsJsonObject("temp").get("metric").getAsFloat());
         data.setIconKey(json.get("icon").getAsString());
         data.setQpf(json.getAsJsonObject("qpf").get("metric").getAsFloat());
+        data.setSnow(json.getAsJsonObject("snow").get("metric").getAsFloat());
         data.setWspd(json.getAsJsonObject("wspd").get("metric").getAsInt());
+        data.setWindDirection(json.getAsJsonObject("wdir").get("degrees").getAsInt());
+        data.setPop(json.get("pop").getAsFloat() / 100f);
         return data;
     }
 }
