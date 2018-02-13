@@ -144,9 +144,11 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_measurements:
                 fragment = MeasurementsFragment.newInstance();
+                setTitle(R.string.title_measurements);
                 break;
             case R.id.nav_forecast:
                 fragment = ForecastFragment.newInstance();
+                setTitle(R.string.title_forecast);
                 break;
             case R.id.nav_set_as_home:
                 DialogFragment dialog = new LocationDialogFragment();
@@ -165,6 +167,9 @@ public class MainActivity extends AppCompatActivity
 
             if (itemSwitchLocation != null) {
                 itemSwitchLocation.setVisible(item.getItemId() == R.id.nav_dashboard);
+            }
+            if (item.getItemId() == R.id.nav_dashboard) {
+                getCurrentLocationAndUpdateUI();
             }
         }
 

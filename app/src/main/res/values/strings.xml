@@ -24,8 +24,12 @@
     <string name="error_no_data">No Data Available</string>
 
     <string name="home">Home</string>
+
+    <string name="title_measurements">Measurements</string>
+    <string name="title_forecast">10 Day Forecast</string>
+    <string name="title_day_forecast">Day Forecast</string>
+
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-    <string name="title_activity_day_detail">DayDetailActivity</string>
 
 </resources>

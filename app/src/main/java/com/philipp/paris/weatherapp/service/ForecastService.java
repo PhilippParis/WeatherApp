@@ -10,6 +10,7 @@ import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.service.caching.OfflineRequestCacheInterceptor;
 import com.philipp.paris.weatherapp.service.caching.ResponseCacheInterceptor;
 import com.philipp.paris.weatherapp.util.Constants;
+import com.philipp.paris.weatherapp.web.weatherunderground.WULanguageUtil;
 import com.philipp.paris.weatherapp.web.weatherunderground.WUService;
 import com.philipp.paris.weatherapp.web.weatherunderground.conversion.WUConverterFactory;
 import com.philipp.paris.weatherapp.web.weatherunderground.results.CurrentConditionsResult;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.*;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -99,7 +101,8 @@ public class ForecastService {
 
     public void getCurrentConditions(final ServiceCallback<Measurement> callback) {
         final String location = latitude + "," + longitude;
-        service.currentConditions(Constants.WU_API_KEY, location).enqueue(new Callback<CurrentConditionsResult>() {
+        service.currentConditions(Constants.WU_API_KEY, location,
+                WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<CurrentConditionsResult>() {
             @Override
             public void onResponse(Call<CurrentConditionsResult> call, Response<CurrentConditionsResult> response) {
                 if (response.body() != null) {
@@ -117,7 +120,8 @@ public class ForecastService {
 
     public void getForecastDayHourly(final ServiceCallback<List<ForecastHour>> callback) {
         final String location = latitude + "," + longitude;
-        service.forecastDayHourly(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastHourlyResult>() {
+        service.forecastDayHourly(Constants.WU_API_KEY, location,
+                WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastHourlyResult>() {
             @Override
             public void onResponse(Call<ForecastHourlyResult> call, Response<ForecastHourlyResult> response) {
                 if (response.body() != null) {
@@ -136,7 +140,8 @@ public class ForecastService {
 
     public void getForecast10Day(final ServiceCallback<List<ForecastDay>> callback) {
         final String location = latitude + "," + longitude;
-        service.forecast10Day(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastDailyResult>() {
+        service.forecast10Day(Constants.WU_API_KEY, location,
+                WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastDailyResult>() {
             @Override
             public void onResponse(Call<ForecastDailyResult> call, Response<ForecastDailyResult> response) {
                 if (response.body() != null) {
@@ -155,7 +160,8 @@ public class ForecastService {
 
     public void getForecast10DayHourly(final ServiceCallback<List<ForecastHour>> callback) {
         final String location = latitude + "," + longitude;
-        service.forecast10DayHourly(Constants.WU_API_KEY, location).enqueue(new Callback<ForecastHourlyResult>() {
+        service.forecast10DayHourly(Constants.WU_API_KEY, location,
+                WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastHourlyResult>() {
             @Override
             public void onResponse(Call<ForecastHourlyResult> call, Response<ForecastHourlyResult> response) {
                 if (response.body() != null) {
