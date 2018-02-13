@@ -38,7 +38,7 @@ public class DateUtil {
     public static boolean isNight(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.HOUR_OF_DAY) > 9 && calendar.get(Calendar.HOUR_OF_DAY) < 6;
+        return calendar.get(Calendar.HOUR_OF_DAY) >= 21 || calendar.get(Calendar.HOUR_OF_DAY) < 6;
     }
 
     public static long diff(Date from, Date to, int unit) {
