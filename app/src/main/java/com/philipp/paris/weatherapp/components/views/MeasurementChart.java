@@ -15,6 +15,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.components.converters.DateAxisValueFormatter;
 import com.philipp.paris.weatherapp.domain.Measurement;
@@ -32,7 +35,8 @@ public class MeasurementChart extends GridLayout {
     private static final float CORRECTION_FACTOR_WEEK = 100000f / (24f*60f*60f);
     private static final float CORRECTION_FACTOR_DAY = 1;
 
-    private String[] colors = {"#FF303F9F", "#311B92", "#01579B", "#1B5E20", "#E65100"};
+    private String[] lineColors = {"#FF303F9F", "#311B92", "#01579B", "#1B5E20", "#E65100"};
+    private String[] fillColors = {"#7986CB", "#9575CD", "#4FC3F7", "#81C784", "#FFCC80"};
 
     public enum Scope {DAY, WEEK}
 
@@ -56,14 +60,16 @@ public class MeasurementChart extends GridLayout {
 
     public void initChart(Scope scope) {
         this.scope = scope;
+        this.chart.clear();
         maxAbsTemperature = Float.MIN_VALUE;
         lineData = new LineData();
         showProgressBar();
     }
 
-    public void addSeries(String label, List<Measurement> data) {
-        lineData.addDataSet(toLineDataSet(label, data,
-                Color.parseColor(colors[lineData.getDataSetCount()])));
+    public void addSeries(String label, List<Measurement> data, Date origin) {
+        lineData.addDataSet(toLineDataSet(label, data, origin,
+                Color.parseColor(lineColors[lineData.getDataSetCount()]),
+                Color.parseColor(fillColors[lineData.getDataSetCount()])));
 
         yAxis.setAxisMinimum(-1.0f * (maxAbsTemperature + TEMP_PADDING));
         yAxis.setAxisMaximum(maxAbsTemperature + TEMP_PADDING);
@@ -88,26 +94,31 @@ public class MeasurementChart extends GridLayout {
         chart.setVisibility(GONE);
     }
 
-    private LineDataSet toLineDataSet(String label, List<Measurement> data, int color) {
+    private LineDataSet toLineDataSet(String label, List<Measurement> data, Date origin, int lineColor, int fillColor) {
         List<Entry> temperature = new ArrayList<>();
-        Date origin = data.get(0).getTime();
 
         for (Measurement w : data) {
-            float timestamp = (w.getTime().getTime() - origin.getTime())  *
-                    (scope == Scope.DAY? CORRECTION_FACTOR_DAY : CORRECTION_FACTOR_WEEK);
+            long timestamp = (long) ((w.getTime().getTime() - origin.getTime())  *
+                    (scope == Scope.DAY? CORRECTION_FACTOR_DAY : CORRECTION_FACTOR_WEEK));
             temperature.add(new Entry(timestamp, w.getTemperature()));
 
-            if (maxAbsTemperature < Math.abs(w.getTemperature())) {
-                maxAbsTemperature = Math.abs(w.getTemperature());
-            }
+            maxAbsTemperature = Math.max(maxAbsTemperature, Math.abs(w.getTemperature()));
         }
 
         formatAxis(scope, origin);
         LineDataSet temperatureDataSet = new LineDataSet(temperature, label);
         temperatureDataSet.setDrawCircles(false);
         temperatureDataSet.setLineWidth(2.5f);
-        temperatureDataSet.setColor(color);
+        temperatureDataSet.setColor(lineColor);
         temperatureDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        temperatureDataSet.setDrawFilled(true);
+        temperatureDataSet.setFillColor(fillColor);
+        temperatureDataSet.setFillFormatter(new IFillFormatter() {
+            @Override
+            public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
+                return 0;
+            }
+        });
         return temperatureDataSet;
     }
 

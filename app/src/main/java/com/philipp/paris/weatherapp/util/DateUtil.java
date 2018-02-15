@@ -33,7 +33,7 @@ public class DateUtil {
 
     public static Pair<Date, Date> getStartEndOfCurrentWeek() {
         Calendar calendar = getCalendarAtStartOfDay(getCurrentTime());
-        calendar.add(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek() - calendar.get(Calendar.DAY_OF_WEEK));
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         Date from = calendar.getTime();
 
         calendar.add(Calendar.DAY_OF_YEAR, 6);

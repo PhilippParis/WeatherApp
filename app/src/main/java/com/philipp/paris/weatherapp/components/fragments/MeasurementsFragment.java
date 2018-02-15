@@ -120,7 +120,7 @@ public class MeasurementsFragment extends Fragment implements View.OnClickListen
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(data.get(0).getTime());
             int year = calendar.get(Calendar.YEAR);
-            chart.addSeries(String.valueOf(year), data);
+            chart.addSeries(String.valueOf(year), data, range.first);
 
             // request data from prev year
             sendDataRequest(year - 1);
