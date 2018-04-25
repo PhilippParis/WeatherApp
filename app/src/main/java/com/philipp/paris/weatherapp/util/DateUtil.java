@@ -36,7 +36,7 @@ public class DateUtil {
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         Date from = calendar.getTime();
 
-        calendar.add(Calendar.DAY_OF_YEAR, 6);
+        calendar.add(Calendar.DAY_OF_YEAR, 7);
         Date to = calendar.getTime();
 
         return new Pair<>(from, to);

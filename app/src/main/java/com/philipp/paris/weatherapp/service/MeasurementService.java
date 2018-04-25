@@ -3,29 +3,30 @@ package com.philipp.paris.weatherapp.service;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.philipp.paris.influxdb.InfluxDB;
+import com.philipp.paris.influxdb.InfluxDBCallback;
+import com.philipp.paris.influxdb.query.InfluxDBQuery;
+import com.philipp.paris.influxdb.query.InfluxDBQueryResult;
+
 import com.philipp.paris.weatherapp.WeatherApp;
 import com.philipp.paris.weatherapp.domain.Settings;
 import com.philipp.paris.weatherapp.domain.Measurement;
 import com.philipp.paris.weatherapp.util.DateUtil;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDB;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDBFactory;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQuery;
-import com.philipp.paris.weatherapp.web.influxdb.InfluxDBQueryResult;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import okhttp3.OkHttpClient;
 
 public class MeasurementService {
     private static final String TAG = "MeasurementService";
     private static final String DB_NAME = "db";
     private static MeasurementService instance;
 
-    private class InfluxDBCallback implements com.philipp.paris.weatherapp.web.influxdb.InfluxDBCallback {
+    private InfluxDB db;
+
+    private class Callback implements InfluxDBCallback {
         private ServiceCallback<List<Measurement>> callback;
-        private InfluxDBCallback(ServiceCallback<List<Measurement>> callback) {
+        private Callback(ServiceCallback<List<Measurement>> callback) {
             this.callback = callback;
         }
         @Override
@@ -53,14 +54,16 @@ public class MeasurementService {
         return instance;
     }
 
-    private MeasurementService() {
-
+    public MeasurementService() {
+        Settings settings = new Settings();
+        db = InfluxDB.Builder()
+                .enableAuthentication(settings.getDbUsername(), settings.getDbPassword())
+                .enableHTTPCache(WeatherApp.getAppContext(), (long) 5 * 1024 * 1024, 600)
+                .connect(DB_NAME, settings.getDbUrl());
     }
 
     public void clearCache() {
-        Settings settings = new Settings();
-        InfluxDBFactory.get(DB_NAME, settings.getDbUrl(),
-                settings.getDbUsername(), settings.getDbPassword()).clearCache();
+        db.clearCache();
     }
 
     public void getMeasurementsToday(final ServiceCallback<List<Measurement>> callback) {
@@ -71,32 +74,11 @@ public class MeasurementService {
 
     public void getMeasurements(Date from, Date to, final ServiceCallback<List<Measurement>> callback) {
         Log.v(TAG, "entering getMeasurements with params " + from.toString() +", " + to.toString());
-        InfluxDB db = getDB(callback);
         if (db != null){
             InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather where time > @from and time < @to")
                     .addParameter("@from", from)
                     .addParameter("@to", to);
-            db.query(query, new InfluxDBCallback(callback));
-        }
-    }
-
-    public void getMeasurements(final ServiceCallback<List<Measurement>> callback) {
-        Log.v(TAG, "entering getMeasurements");
-        InfluxDB db = getDB(callback);
-        if (db != null){
-            InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather");
-            db.query(query, new InfluxDBCallback(callback));
-        }
-    }
-
-    private InfluxDB getDB(ServiceCallback<List<Measurement>> callback) {
-        Settings settings = new Settings();
-        try {
-            return InfluxDBFactory.get(DB_NAME, settings.getDbUrl(),
-                    settings.getDbUsername(), settings.getDbPassword());
-        } catch (IllegalArgumentException e) {
-            callback.onError(e);
-            return null;
+            db.query(query, new Callback(callback));
         }
     }
 
