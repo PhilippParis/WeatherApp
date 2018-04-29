@@ -13,6 +13,9 @@ public class ForecastDay implements Serializable {
     private String condition;
     private String iconKey;
     private String text;
+    private Float qpfAllDay;
+    private Float snowAllDay;
+    private Float windMax;
 
     public Date getTime() {
         return time;
@@ -60,5 +63,29 @@ public class ForecastDay implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Float getQpfAllDay() {
+        return qpfAllDay;
+    }
+
+    public void setQpfAllDay(Float qpfAllDay) {
+        this.qpfAllDay = qpfAllDay;
+    }
+
+    public Float getSnowAllDay() {
+        return snowAllDay;
+    }
+
+    public void setSnowAllDay(Float snowAllDay) {
+        this.snowAllDay = snowAllDay;
+    }
+
+    public Float getWindMax() {
+        return windMax;
+    }
+
+    public void setWindMax(Float windMax) {
+        this.windMax = windMax;
     }
 }
