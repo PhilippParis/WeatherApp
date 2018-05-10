@@ -31,4 +31,7 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+
+    <string name="today">Heute</string>
+    <string name="tomorrow">Morgen</string>
 </resources>

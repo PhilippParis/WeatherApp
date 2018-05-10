@@ -1,10 +1,16 @@
 package com.philipp.paris.weatherapp.util;
 
 
+import android.content.Context;
 import android.support.v4.util.Pair;
 
+import com.philipp.paris.weatherapp.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtil {
     public static final int SECOND = 1000;
@@ -62,6 +68,17 @@ public class DateUtil {
         long from = range.first.getTime();
         long to = range.second.getTime();
         return new Pair<>(new Date(from + millis), new Date(to + millis));
+    }
+
+    public static String format(Context context, Date date, String format) {
+        if (diff(getCurrentTime(), date, DAY) == 0) {
+            return context.getResources().getString(R.string.today);
+        } else if (diff(getCurrentTime(), date, DAY) == 1) {
+            return context.getResources().getString(R.string.tomorrow);
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+        return dateFormat.format(date);
     }
 
     private static Calendar getCalendarAtStartOfDay(Date day) {

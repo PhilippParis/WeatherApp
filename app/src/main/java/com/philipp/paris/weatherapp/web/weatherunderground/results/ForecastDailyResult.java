@@ -36,6 +36,8 @@ public class ForecastDailyResult {
         data.setQpfAllDay(json.getAsJsonObject("qpf_allday").get("mm").getAsFloat());
         data.setSnowAllDay(json.getAsJsonObject("snow_allday").get("cm").getAsFloat());
         data.setWindMax(json.getAsJsonObject("maxwind").get("kph").getAsFloat());
+        data.setPop(json.get("pop").getAsFloat() / 100f);
+        data.setWindDirection(json.getAsJsonObject("maxwind").get("dir").getAsString());
         return data;
     }
 }

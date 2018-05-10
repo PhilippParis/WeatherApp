@@ -2,6 +2,7 @@ package com.philipp.paris.weatherapp.components.views;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.philipp.paris.weatherapp.R;
 import com.philipp.paris.weatherapp.domain.ForecastDay;
+import com.philipp.paris.weatherapp.util.DateUtil;
 import com.philipp.paris.weatherapp.util.WeatherIconUtil;
 
 import java.text.DateFormat;
@@ -19,15 +21,13 @@ import java.util.Locale;
 
 public class SimpleDayForecastView extends LinearLayout {
     private TextView tvTime;
-    private TextView tvCondition;
     private ImageView ivIcon;
-    private ImageView ivRain;
-    private ImageView ivSnow;
     private TextView tvTemperature;
     private TextView tvTemperatureMin;
-    private TextView tvRain;
+    private TextView tvQPF;
+    private TextView tvProbability;
+    private TextView tvWindDirection;
     private TextView tvWind;
-    private DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM", Locale.getDefault());
 
     public SimpleDayForecastView(Context context) {
         super(context);
@@ -45,31 +45,28 @@ public class SimpleDayForecastView extends LinearLayout {
         inflater.inflate(R.layout.simple_day_forecast_view_item, this, true);
 
         tvTime = findViewById(R.id.tvTime);
-        tvCondition = findViewById(R.id.tvCondition);
         tvTemperature = findViewById(R.id.tvTemperature);
         tvTemperatureMin = findViewById(R.id.tvTemperatureMin);
-        tvRain = findViewById(R.id.tvRain);
+        tvQPF = findViewById(R.id.tvQPF);
+        tvProbability = findViewById(R.id.tvProb);
         tvWind = findViewById(R.id.tvWind);
+        tvWindDirection = findViewById(R.id.tvDirection);
         ivIcon = findViewById(R.id.ivIcon);
-        ivRain = findViewById(R.id.ivRain);
-        ivSnow = findViewById(R.id.ivSnow);
     }
 
     public void setData(ForecastDay data) {
-        tvTime.setText(dateFormat.format(data.getTime()));
-        tvCondition.setText(data.getCondition());
+        tvTime.setText(DateUtil.format(getContext(), data.getTime(), "EEE, d MMM"));
+
         tvTemperature.setText(String.format(Locale.getDefault(), "%.0f°", data.getTemperature()));
         tvTemperatureMin.setText(String.format(Locale.getDefault(), "%.0f°", data.getTemperatureMin()));
         ivIcon.setImageResource(WeatherIconUtil.getDrawableID(getContext(), data.getIconKey(), data.getTime()));
         tvWind.setText(String.format(Locale.getDefault(), "%.0f km/h", data.getWindMax()));
-        if (data.getQpfAllDay() >= data.getSnowAllDay()) {
-            ivRain.setVisibility(VISIBLE);
-            ivSnow.setVisibility(GONE);
-            tvRain.setText(String.format(Locale.getDefault(), "%.0f mm", data.getQpfAllDay()));
-        } else {
-            ivRain.setVisibility(GONE);
-            ivSnow.setVisibility(VISIBLE);
-            tvRain.setText(String.format(Locale.getDefault(), "%.0f cm", data.getSnowAllDay()));
+        tvWindDirection.setText(data.getWindDirection());
+        tvProbability.setText(String.format(Locale.getDefault(), "%d %%", (int) (data.getPop() * 100)));
+        if (data.getQpfAllDay() >= data.getSnowAllDay() && data.getQpfAllDay() > 0) {
+            tvQPF.setText(String.format(Locale.getDefault(), "%.0f mm", data.getQpfAllDay()));
+        } else if (data.getSnowAllDay() > 0) {
+            tvQPF.setText(String.format(Locale.getDefault(), "%.0f cm", data.getSnowAllDay()));
         }
     }
 }

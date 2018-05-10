@@ -2,110 +2,84 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:layout_margin="10dp"
     android:orientation="horizontal">
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="3"
+        android:text="TextView"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvTime"
+            android:id="@+id/tvWind"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:layout_centerInParent="true"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="20 km/h"
+            android:textAlignment="center"
+            android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/tvCondition"
+            android:id="@+id/tvDirection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="W"
+            android:textAlignment="center"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvQPF"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:text="-"
+            android:textAlignment="center"
+            android:textSize="12sp" />
 
-            <ImageView
-                android:id="@+id/ivSnow"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:layout_weight="1"
-                android:visibility="visible"
-                app:srcCompat="@drawable/snow" />
-
-            <ImageView
-                android:id="@+id/ivRain"
-                android:layout_width="20dp"
-                android:layout_height="18dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:padding="2dp"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/droplet" />
-
-            <TextView
-                android:id="@+id/tvRain"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="2"
-                android:text="10 mm"
-                android:textAlignment="textStart"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvProb"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="24dp"
-                android:layout_height="18dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="false"
-                android:cropToPadding="false"
-                android:padding="2dp"
-                android:scaleType="centerInside"
-                app:srcCompat="@drawable/wind" />
-
-            <TextView
-                android:id="@+id/tvWind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_weight="2"
-                android:text="20 km/h"
-                android:textAlignment="textStart"
-                android:textSize="12sp" />
-        </LinearLayout>
+            android:text="30%"
+            android:textAlignment="center"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/ivIcon"
-        android:layout_width="100dp"
+        android:layout_width="110dp"
         android:layout_height="match_parent"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_sunny" />
 
