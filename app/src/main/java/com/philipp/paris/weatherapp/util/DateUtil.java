@@ -71,9 +71,12 @@ public class DateUtil {
     }
 
     public static String format(Context context, Date date, String format) {
-        if (diff(getCurrentTime(), date, DAY) == 0) {
+        Date current = getStartEndOfCurrentDay().first;
+        date = getStartEndOfDay(date).second;
+
+        if (diff(current, date, DAY) == 0) {
             return context.getResources().getString(R.string.today);
-        } else if (diff(getCurrentTime(), date, DAY) == 1) {
+        } else if (diff(current, date, DAY) == 1) {
             return context.getResources().getString(R.string.tomorrow);
         }
 
