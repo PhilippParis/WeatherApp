@@ -72,7 +72,7 @@ public class DateUtil {
 
     public static String format(Context context, Date date, String format) {
         Date current = getStartEndOfCurrentDay().first;
-        date = getStartEndOfDay(date).second;
+        date = getStartEndOfDay(date).first;
 
         if (diff(current, date, DAY) == 0) {
             return context.getResources().getString(R.string.today);
@@ -90,6 +90,7 @@ public class DateUtil {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         return calendar;
     }
 }
