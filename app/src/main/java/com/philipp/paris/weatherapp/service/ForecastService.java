@@ -47,16 +47,17 @@ public class ForecastService {
     }
 
     private ForecastService() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
         cache = new okhttp3.Cache(new File(WeatherApp.getAppContext().getCacheDir(),
                 "HTTP"), (long) 5 * 1024 * 1024);
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .cache(cache)
                 .addNetworkInterceptor(new ResponseCacheInterceptor())
                 .addInterceptor(new OfflineRequestCacheInterceptor())
+                .addInterceptor(interceptor)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -73,6 +74,7 @@ public class ForecastService {
     }
 
     public void deleteCurrentLocation() {
+        Log.v(TAG, "deleteCurrentLocation");
         synchronized (this) {
             this.latitude = 0.0;
             this.longitude = 0.0;
@@ -80,6 +82,7 @@ public class ForecastService {
     }
 
     public void setCurrentLocation(double latitude, double longitude) {
+        Log.v(TAG, "setCurrentLocation: lat=" + latitude + " lng=" + longitude);
         synchronized (this) {
             this.latitude = latitude;
             this.longitude = longitude;
@@ -87,6 +90,7 @@ public class ForecastService {
     }
 
     public void clearCache() {
+        Log.v(TAG, "clearCache");
         try {
             Iterator<String> it = cache.urls();
             while (it.hasNext()) {
@@ -100,6 +104,11 @@ public class ForecastService {
     }
 
     public void getCurrentConditions(final ServiceCallback<Measurement> callback) {
+        Log.v(TAG, "getCurrentConditions");
+        if (!currentLocationSet()) {
+            Log.v(TAG, "getCurrentConditions - location not set -> cancel");
+            return;
+        }
         final String location = latitude + "," + longitude;
         service.currentConditions(Constants.WU_API_KEY, location,
                 WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<CurrentConditionsResult>() {
@@ -108,17 +117,26 @@ public class ForecastService {
                 if (response.body() != null) {
                     callback.onSuccess(response.body().measurement);
                 } else {
+                    Log.e(TAG, "getCurrentConditions failed");
+                    clearCache();
                     callback.onError(new Exception("no internet connection"));
                 }
             }
             @Override
             public void onFailure(Call<CurrentConditionsResult> call, Throwable t) {
+                Log.e(TAG, "getCurrentConditions failed", t);
+                clearCache();
                 callback.onError(t);
             }
         });
     }
 
     public void getForecastDayHourly(final ServiceCallback<List<ForecastHour>> callback) {
+        Log.v(TAG, "getForecastDayHourly");
+        if (!currentLocationSet()) {
+            Log.v(TAG, "getForecastDayHourly - location not set -> cancel");
+            return;
+        }
         final String location = latitude + "," + longitude;
         service.forecastDayHourly(Constants.WU_API_KEY, location,
                 WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastHourlyResult>() {
@@ -127,18 +145,27 @@ public class ForecastService {
                 if (response.body() != null) {
                     callback.onSuccess(response.body().hours);
                 } else {
+                    Log.e(TAG, "getForecastDayHourly failed");
+                    clearCache();
                     callback.onError(new Exception("no internet connection"));
                 }
             }
 
             @Override
             public void onFailure(Call<ForecastHourlyResult> call, Throwable t) {
+                Log.e(TAG, "getForecastDayHourly failed", t);
+                clearCache();
                 callback.onError(t);
             }
         });
     }
 
     public void getForecast10Day(final ServiceCallback<List<ForecastDay>> callback) {
+        Log.v(TAG, "getForecast10Day");
+        if (!currentLocationSet()) {
+            Log.v(TAG, "getForecast10Day - location not set -> cancel");
+            return;
+        }
         final String location = latitude + "," + longitude;
         service.forecast10Day(Constants.WU_API_KEY, location,
                 WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastDailyResult>() {
@@ -147,18 +174,27 @@ public class ForecastService {
                 if (response.body() != null) {
                     callback.onSuccess(response.body().days);
                 } else {
+                    Log.e(TAG, "getForecast10Day failed");
+                    clearCache();
                     callback.onError(new Exception("no internet connection"));
                 }
             }
 
             @Override
             public void onFailure(Call<ForecastDailyResult> call, Throwable t) {
+                Log.e(TAG, "getForecast10Day failed", t);
+                clearCache();
                 callback.onError(t);
             }
         });
     }
 
     public void getForecast10DayHourly(final ServiceCallback<List<ForecastHour>> callback) {
+        Log.v(TAG, "getForecast10DayHourly");
+        if (!currentLocationSet()) {
+            Log.v(TAG, "getForecast10DayHourly - location not set -> cancel");
+            return;
+        }
         final String location = latitude + "," + longitude;
         service.forecast10DayHourly(Constants.WU_API_KEY, location,
                 WULanguageUtil.getLanguage(Locale.getDefault())).enqueue(new Callback<ForecastHourlyResult>() {
@@ -167,12 +203,16 @@ public class ForecastService {
                 if (response.body() != null) {
                     callback.onSuccess(response.body().hours);
                 } else {
+                    Log.e(TAG, "getForecast10DayHourly failed");
+                    clearCache();
                     callback.onError(new Exception("no internet connection"));
                 }
             }
 
             @Override
             public void onFailure(Call<ForecastHourlyResult> call, Throwable t) {
+                Log.e(TAG, "getForecast10DayHourly failed", t);
+                clearCache();
                 callback.onError(t);
             }
         });

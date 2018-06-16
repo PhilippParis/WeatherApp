@@ -1,6 +1,8 @@
 package com.philipp.paris.weatherapp.web.weatherunderground.results;
 
 
+import android.util.Log;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.philipp.paris.weatherapp.domain.ForecastDay;
@@ -10,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ForecastDailyResult {
+    private static final String TAG = "ForecastDailyResult";
     public List<ForecastDay> days = new ArrayList<>();
 
     public static ForecastDailyResult parse(JsonObject json) {
@@ -28,16 +31,20 @@ public class ForecastDailyResult {
 
     private static ForecastDay parseForecastDay(JsonObject json) {
         ForecastDay data = new ForecastDay();
-        data.setTime(new Date(json.getAsJsonObject("date").get("epoch").getAsLong() * 1000));
-        data.setTemperatureMin(json.getAsJsonObject("low").get("celsius").getAsFloat());
-        data.setTemperature(json.getAsJsonObject("high").get("celsius").getAsFloat());
-        data.setIconKey(json.get("icon").getAsString());
-        data.setCondition(json.get("conditions").getAsString());
-        data.setQpfAllDay(json.getAsJsonObject("qpf_allday").get("mm").getAsFloat());
-        data.setSnowAllDay(json.getAsJsonObject("snow_allday").get("cm").getAsFloat());
-        data.setWindMax(json.getAsJsonObject("maxwind").get("kph").getAsFloat());
-        data.setPop(json.get("pop").getAsFloat() / 100f);
-        data.setWindDirection(json.getAsJsonObject("maxwind").get("dir").getAsString());
+        try {
+            data.setTime(new Date(json.getAsJsonObject("date").get("epoch").getAsLong() * 1000));
+            data.setTemperatureMin(json.getAsJsonObject("low").get("celsius").getAsFloat());
+            data.setTemperature(json.getAsJsonObject("high").get("celsius").getAsFloat());
+            data.setIconKey(json.get("icon").getAsString());
+            data.setCondition(json.get("conditions").getAsString());
+            data.setWindMax(json.getAsJsonObject("maxwind").get("kph").getAsFloat());
+            data.setPop(json.get("pop").getAsFloat() / 100f);
+            data.setWindDirection(json.getAsJsonObject("maxwind").get("dir").getAsString());
+            data.setQpfAllDay(json.getAsJsonObject("qpf_allday").get("mm").getAsFloat());
+            data.setSnowAllDay(json.getAsJsonObject("snow_allday").get("cm").getAsFloat());
+        } catch (Exception e) {
+            Log.e(TAG,"failed to parse forecast day", e);
+        }
         return data;
     }
 }

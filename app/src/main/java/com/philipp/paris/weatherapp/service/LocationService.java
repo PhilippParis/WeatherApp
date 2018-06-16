@@ -26,6 +26,7 @@ import java.util.Locale;
 import okhttp3.OkHttpClient;
 
 public class LocationService {
+    private static final String TAG = "LocationService";
     public static int REQUEST_LOCATION_PERMISSION_CODE = 1;
     private static LocationService instance;
 
@@ -47,6 +48,7 @@ public class LocationService {
     }
 
     public void getAddress(final ServiceCallback<Address> callback, final LocationServiceCallback lCallback) {
+        Log.v(TAG, "getAddress");
         final LocationManager lm = (LocationManager) WeatherApp.getAppContext().getSystemService(Context.LOCATION_SERVICE);
 
         // check if location is enabled
@@ -64,11 +66,13 @@ public class LocationService {
         // use last known location
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null && location.getTime() > Calendar.getInstance().getTimeInMillis() - 2 * 60 * 1000) {
+            Log.v(TAG, "use last known location");
             callback.onSuccess(locationToAddress(location));
             return;
         }
 
         // request new location
+        Log.v(TAG, "request new location");
         lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -88,15 +92,18 @@ public class LocationService {
     }
 
     public void openLocationSettings(Activity activity) {
+        Log.v(TAG, "openLocationSettings");
         activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
 
     public void requestPermissions(Activity activity) {
+        Log.v(TAG, "requestPermissions");
         ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
                 LocationService.REQUEST_LOCATION_PERMISSION_CODE);
     }
 
     private Address locationToAddress(Location location) {
+        Log.v(TAG, "locationToAddress: " + location);
         Geocoder geocoder = new Geocoder(WeatherApp.getAppContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);

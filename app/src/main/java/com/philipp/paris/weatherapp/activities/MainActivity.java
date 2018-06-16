@@ -119,16 +119,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_switch_location) {
-            // update menu item
-            boolean showHomeData = item.isChecked();
-            item.setIcon(showHomeData ? R.drawable.ic_menu_home : R.drawable.ic_location);
-            item.setTitle(showHomeData ? R.string.menu_show_gps : R.string.menu_show_home);
-            item.setChecked(!item.isChecked());
-
             // update settings
             Settings settings = new Settings();
-            settings.setShowHomeLocationData(showHomeData);
+            settings.setShowHomeLocationData(!settings.showHomeLocationData());
             settings.persist();
+
+            // update menu item
+            itemSwitchLocation.setIcon(settings.showHomeLocationData() ? R.drawable.ic_menu_home : R.drawable.ic_location);
+            itemSwitchLocation.setTitle(settings.showHomeLocationData() ? R.string.menu_show_gps : R.string.menu_show_home);
+            item.setChecked(!item.isChecked());
+
+            // update UI
             getCurrentLocationAndUpdateUI();
         }
 

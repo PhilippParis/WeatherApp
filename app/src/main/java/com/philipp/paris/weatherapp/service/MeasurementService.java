@@ -56,29 +56,35 @@ public class MeasurementService {
 
     public MeasurementService() {
         Settings settings = new Settings();
-        db = InfluxDB.Builder()
-                .enableAuthentication(settings.getDbUsername(), settings.getDbPassword())
-                .enableHTTPCache(WeatherApp.getAppContext(), (long) 5 * 1024 * 1024, 600)
-                .connect(DB_NAME, settings.getDbUrl());
+        if (!settings.getDbUrl().isEmpty()) {
+            db = InfluxDB.Builder()
+                    .enableAuthentication(settings.getDbUsername(), settings.getDbPassword())
+                    .enableHTTPCache(WeatherApp.getAppContext(), (long) 5 * 1024 * 1024, 600)
+                    .connect(DB_NAME, settings.getDbUrl());
+        }
     }
 
     public void clearCache() {
-        db.clearCache();
+        if (db != null) {
+            db.clearCache();
+        }
     }
 
     public void getMeasurementsToday(final ServiceCallback<List<Measurement>> callback) {
-        Log.v(TAG, "entering getMeasurementsToday");
+        Log.v(TAG, "getMeasurementsToday");
         Pair<Date, Date> range = DateUtil.getStartEndOfCurrentDay();
         getMeasurements(range.first, range.second, callback);
     }
 
     public void getMeasurements(Date from, Date to, final ServiceCallback<List<Measurement>> callback) {
-        Log.v(TAG, "entering getMeasurements with params " + from.toString() +", " + to.toString());
+        Log.v(TAG, "getMeasurements with params " + from.toString() +", " + to.toString());
         if (db != null){
             InfluxDBQuery query = new InfluxDBQuery("SELECT * from weather where time > @from and time < @to")
                     .addParameter("@from", from)
                     .addParameter("@to", to);
             db.query(query, new Callback(callback));
+        } else {
+            callback.onError(new Exception("database connection not initialized"));
         }
     }
 
