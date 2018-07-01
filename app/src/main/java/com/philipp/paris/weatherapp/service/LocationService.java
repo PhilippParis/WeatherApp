@@ -1,21 +1,35 @@
 package com.philipp.paris.weatherapp.service;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.philipp.paris.weatherapp.WeatherApp;
 
 import java.io.IOException;
@@ -44,51 +58,57 @@ public class LocationService {
     }
 
     private LocationService() {
-
     }
 
+
     public void getAddress(final ServiceCallback<Address> callback, final LocationServiceCallback lCallback) {
-        Log.v(TAG, "getAddress");
-        final LocationManager lm = (LocationManager) WeatherApp.getAppContext().getSystemService(Context.LOCATION_SERVICE);
-
-        // check if location is enabled
-        if (lm == null || !lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            lCallback.locationDisabled();
-            return;
-        }
-
         // check permissions
-        if (ActivityCompat.checkSelfPermission(WeatherApp.getAppContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(WeatherApp.getAppContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             lCallback.insufficientPermissions();
             return;
         }
 
-        // use last known location
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location != null && location.getTime() > Calendar.getInstance().getTimeInMillis() - 2 * 60 * 1000) {
-            Log.v(TAG, "use last known location");
-            callback.onSuccess(locationToAddress(location));
-            return;
-        }
+        // create location request
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        // request new location
-        Log.v(TAG, "request new location");
-        lm.requestSingleUpdate(LocationManager.GPS_PROVIDER, new LocationListener() {
+        // create location settings request
+        LocationSettingsRequest settingsRequest = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest).build();
+
+        // check location settings
+        SettingsClient client = LocationServices.getSettingsClient(WeatherApp.getAppContext());
+        client.checkLocationSettings(settingsRequest)
+                .addOnSuccessListener(new OnSuccessListener<LocationSettingsResponse>() {
+                    @Override
+                    public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                        getLocation(callback);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        lCallback.locationDisabled();
+                    }
+                });
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getLocation(final ServiceCallback<Address> callback) {
+        // get location
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(WeatherApp.getAppContext());
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onSuccess(Location location) {
                 if (location != null) {
+                    Log.v(TAG, "location retrieved " + location);
                     callback.onSuccess(locationToAddress(location));
                 } else {
-                    callback.onError(null);
+                    Log.e(TAG, "failed to retrieve location");
+                    callback.onError(new Exception("failed to retrieve location"));
                 }
             }
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {}
-            @Override
-            public void onProviderEnabled(String s) {}
-            @Override
-            public void onProviderDisabled(String s) {}
-        }, null);
+        });
     }
 
     public void openLocationSettings(Activity activity) {
@@ -98,7 +118,7 @@ public class LocationService {
 
     public void requestPermissions(Activity activity) {
         Log.v(TAG, "requestPermissions");
-        ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_FINE_LOCATION},
+        ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.ACCESS_COARSE_LOCATION},
                 LocationService.REQUEST_LOCATION_PERMISSION_CODE);
     }
 
