@@ -11,19 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvDate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="TextView"
-            android:textAlignment="textStart"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
 
         <RelativeLayout
             android:layout_width="match_parent"

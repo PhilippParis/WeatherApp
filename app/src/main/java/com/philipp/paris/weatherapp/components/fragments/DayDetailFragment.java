@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ public class DayDetailFragment extends Fragment {
     private TextView tvTemperatureMin;
     private TextView tvTemperature;
     private TextView tvText;
-    private TextView tvDate;
     private ImageView ivIcon;
     private HourlyForecastView hourlyForecastView;
 
@@ -70,14 +70,15 @@ public class DayDetailFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tvDate = view.findViewById(R.id.tvDate);
         tvTemperature = view.findViewById(R.id.tvTemperature);
         tvTemperatureMin = view.findViewById(R.id.tvTemperatureMin);
         tvText = view.findViewById(R.id.tvText);
         ivIcon = view.findViewById(R.id.ivIcon);
         hourlyForecastView = view.findViewById(R.id.hourlyForecastView);
 
-        tvDate.setText(DateFormat.getDateInstance(DateFormat.FULL).format(forecastDay.getTime()));
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        activity.getSupportActionBar().setTitle(DateUtil.format(getContext(), forecastDay.getTime(), "EEE, d MMM"));
         tvTemperature.setText(String.format(Locale.getDefault(), "%.1f°", forecastDay.getTemperature()));
         tvTemperatureMin.setText(String.format(Locale.getDefault(), "%.1f°", forecastDay.getTemperatureMin()));
         tvText.setText(forecastDay.getText());

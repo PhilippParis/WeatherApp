@@ -55,6 +55,7 @@ public class DayDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         mViewPager = findViewById(R.id.container);
         vgError = findViewById(R.id.vgError);
         progressBar = findViewById(R.id.progressBar);
